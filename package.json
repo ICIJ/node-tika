@@ -1,0 +1,28 @@
+{
+	"name": "tika",
+	"version": "0.0.1",
+	"description": "Apache Tika bindings.",
+	"homepage": "https://github.com/mattcg/tika",
+	"contributors": [
+		{
+			"name": "Matthew Caruana Galizia",
+			"email": "m@m.cg"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mattcg/dulce.git"
+	},
+	"bugs": {
+		"url": "https://github.com/mattcg/dulce/issues"
+	},
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "http://mattcg.mit-license.org/"
+		}
+	],
+	"dependencies": {
+		"java": "~0.2.9"
+	}
+}
