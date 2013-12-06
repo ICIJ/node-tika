@@ -86,7 +86,7 @@ function fillMetadata(parser, metadata, contentType, fileName, cb) {
 
 		function(parser, metadata, cb) {
 			if (!contentType) {
-				return cb();
+				return cb(null, parser, metadata, null);
 			}
 
 			parser.getDetector(function(err, detector) {
@@ -95,8 +95,8 @@ function fillMetadata(parser, metadata, contentType, fileName, cb) {
 		},
 
 		function(parser, metadata, detector, cb) {
-			if (!contentType) {
-				return cb();
+			if (!detector) {
+				return cb(null, parser, null);
 			}
 
 			java.newInstance('cg.m.nodejs.tika.DetectorHelper', contentType, detector, metadata, function(err, detectorHelper) {
@@ -105,7 +105,7 @@ function fillMetadata(parser, metadata, contentType, fileName, cb) {
 		},
 
 		function(parser, detectorHelper, cb) {
-			if (!contentType) {
+			if (!detectorHelper) {
 				return cb();
 			}
 
