@@ -17,6 +17,9 @@
 	"bugs": {
 		"url": "https://github.com/mattcg/dulce/issues"
 	},
+	"scripts": {
+		"test": "make test"
+	},
 	"licenses": [
 		{
 			"type": "MIT",
@@ -26,5 +29,8 @@
 	"dependencies": {
 		"java": "~0.2.9",
 		"async": "~0.2.9"
+	},
+	"devDependencies": {
+		"mocha": "~1.15.1"
 	}
 }

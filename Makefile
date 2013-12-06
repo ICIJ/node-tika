@@ -17,4 +17,7 @@ node_modules: package.json
 	npm install
 	touch $@
 
-.PHONY: install
+test: node_modules
+	./node_modules/.bin/mocha --timeout 30000 --reporter spec --check-leaks --ui tdd --recursive
+
+.PHONY: install test
