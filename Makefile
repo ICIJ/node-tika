@@ -2,7 +2,7 @@
 
 JAVAS := $(shell ls java/cg/m/nodejs/tika/*.java)
 
-install: jar/Tika.jar
+install: jar/Tika.jar node_modules
 
 jar/Tika.jar: $(JAVAS) build/java
 	javac -d build/java -cp build/tika/tika-core/target/tika-core-1.5-SNAPSHOT.jar:build/tika/tika-core/target/tika-parsers-1.5-SNAPSHOT.jar $(JAVAS)
@@ -12,5 +12,9 @@ build/java:
 	if [ ! -d $@ ]; then \
 		mkdir -p $@; \
 	fi
+
+node_modules: package.json
+	npm install
+	touch $@
 
 .PHONY: install
