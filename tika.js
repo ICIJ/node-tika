@@ -7,7 +7,9 @@ var path = require('path');
 
 java.classpath.push('jar/Tika.jar');
 
-java.classpath.push('jar/vendor/tika-core-1.5-SNAPSHOT.jar');
+// TODO: Make everything async. Use async method calls (with callback) and async constructors instead of java.import.
+// TODO: Instead of using tika-server JAR, copy tika-server's pom.xml here and use maven to install deps and create Tika.jar.
+
 java.classpath.push('jar/vendor/tika-server-1.5-SNAPSHOT.jar');
 
 java.options.push('-Djava.awt.headless=true');
@@ -25,13 +27,13 @@ var MediaType = java.import('org.apache.tika.mime.MediaType');
 var EncryptedDocumentException = java.import('org.apache.tika.exception.EncryptedDocumentException');
 var TikaException = java.import('org.apache.tika.exception.TikaException');
 var BodyContentHandler = java.import('org.apache.tika.sax.BodyContentHandler');
-var RichTextContentHandler = java.import('org.apache.tika.server.RichTextContentHandler');
 var Metadata = java.import('org.apache.tika.metadata.Metadata');
 var TikaMetadataKeys = java.import('org.apache.tika.metadata.TikaMetadataKeys');
 var HttpHeaders = java.import('org.apache.tika.metadata.HttpHeaders');
 
 var ShutdownHookHelper = java.import('cg.m.nodejs.tika.ShutdownHookHelper');
 var DetectorHelper = java.import('cg.m.nodejs.tika.DetectorHelper');
+var WriteOutHelper = java.import('cg.m.nodejs.tika.WriteOutHelper');
 
 ShutdownHookHelper.setShutdownHookSync(java.newProxy('java.lang.Runnable', {
 	run: function() {}
@@ -75,7 +77,7 @@ exports.getText = function(filePath, contentType) {
 
 	outputStream = new ByteArrayOutputStream();
     writer = new OutputStreamWriter(outputStream, 'UTF-8');
-	body = new BodyContentHandler(new RichTextContentHandler(writer));
+	body = new BodyContentHandler(new WriteOutHelper(writer));
 
 	parser = createParser();
 
