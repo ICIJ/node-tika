@@ -3,6 +3,7 @@
 	"version": "0.0.1",
 	"description": "Apache Tika bindings.",
 	"homepage": "https://github.com/mattcg/tika",
+	"main": "./tika",
 	"contributors": [
 		{
 			"name": "Matthew Caruana Galizia",
