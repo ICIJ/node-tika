@@ -156,7 +156,25 @@ suite('non-utf8 encoded document tests', function() {
 	test('extract UTF-16 Chinese (Simplified) text', function(done) {
 		tika.getText('test/data/nonutf8/utf16-chinese.txt', null, function(err, text) {
 			assert.ifError(err);
-			assert.equal(text, '只是一些文字。\n\n');
+			assert.equal(text, '\u53ea\u662f\u4e00\u4e9b\u6587\u5b57\u3002\n\n');
+			done();
+		});
+	});
+});
+
+suite('archive tests', function() {
+	test('compressed archive test', function(done) {
+		tika.getText('test/data/archive/files.zip', null, function(err, text) {
+			assert.ifError(err);
+			assert.equal(text.trim(), 'file1.txt\nSome text 1.\n\n\n\n\nfile2.txt\nSome text 2.\n\n\n\n\nfile3.txt\nSome text 3.');
+			done();
+		});
+	});
+
+	test('twice compressed archive test', function(done) {
+		tika.getText('test/data/archive/files-files.zip', null, function(err, text) {
+			assert.ifError(err);
+			assert.equal(text.trim(), 'file4.txt\nSome text 4.\n\n\n\n\nfile5.txt\nSome text 5.\n\n\n\n\nfile6.txt\nSome text 6.\n\n\n\n\nfiles.zip');
 			done();
 		});
 	});
