@@ -144,6 +144,22 @@ suite('non-utf8 encoded document tests', function() {
 			done();
 		});
 	});
+
+	test('extract UTF-16 English-language text', function(done) {
+		tika.getText('test/data/nonutf8/utf16-english.txt', null, function(err, text) {
+			assert.ifError(err);
+			assert.equal(text, 'Just some text.\n\n');
+			done();
+		});
+	});
+
+	test('extract UTF-16 Chinese (Simplified) text', function(done) {
+		tika.getText('test/data/nonutf8/utf16-chinese.txt', null, function(err, text) {
+			assert.ifError(err);
+			assert.equal(text, '只是一些文字。\n\n');
+			done();
+		});
+	});
 });
 
 suite('error handling tests', function() {
