@@ -174,7 +174,7 @@ suite('archive tests', function() {
 	test('twice compressed archive test', function(done) {
 		tika.getText('test/data/archive/files-files.zip', null, function(err, text) {
 			assert.ifError(err);
-			assert.equal(text.trim(), 'file4.txt\nSome text 4.\n\n\n\n\nfile5.txt\nSome text 5.\n\n\n\n\nfile6.txt\nSome text 6.\n\n\n\n\nfiles.zip');
+			assert.equal(text.trim(), 'file4.txt\nSome text 4.\n\n\n\n\nfile5.txt\nSome text 5.\n\n\n\n\nfile6.txt\nSome text 6.\n\n\n\n\nfiles.zip\n\n\nfile1.txt\n\nSome text 1.\n\n\n\n\n\n\n\nfile2.txt\n\nSome text 2.\n\n\n\n\n\n\n\nfile3.txt\n\nSome text 3.');
 			done();
 		});
 	});
