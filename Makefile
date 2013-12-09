@@ -4,7 +4,7 @@ JAVAS := $(shell ls java/cg/m/nodejs/tika/*.java)
 
 install: node_modules
 
-update: jar/Tika.jar jar/vendor/tika-server-1.5-SNAPSHOT.jar
+update: jar/vendor/tika-server-1.5-SNAPSHOT.jar jar/Tika.jar 
 
 jar/Tika.jar: $(JAVAS) build/java
 	javac -d build/java -cp build/tika/tika-core/target/tika-core-1.5-SNAPSHOT.jar:build/tika/tika-core/target/tika-parsers-1.5-SNAPSHOT.jar $(JAVAS)
@@ -14,7 +14,7 @@ jar/vendor/tika-server-1.5-SNAPSHOT.jar: build/tika
 	cp build/tika/tika-server/target/tika-server-1.5-SNAPSHOT.jar $@
 
 build/tika:
-	cd build/tika && git update && mvn clean && mvn install
+	cd build/tika && git pull && mvn clean && mvn install
 
 build/java:
 	if [ ! -d $@ ]; then \
