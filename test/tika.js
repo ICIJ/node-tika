@@ -7,7 +7,7 @@ var assert = require('assert');
 var tika = require('../');
 
 suite('document tests', function() {
-	test('text content-type', function(done) {
+	test('detect txt content-type', function(done) {
 		tika.contentType('test/data/file.txt', function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'text/plain');
@@ -15,7 +15,7 @@ suite('document tests', function() {
 		});
 	});
 
-	test('text content-type and charset', function(done) {
+	test('detect txt content-type and charset', function(done) {
 		tika.contentType('test/data/file.txt', true, function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'text/plain; charset=ISO-8859-1');
@@ -302,7 +302,7 @@ suite('non-utf8 encoded document tests', function() {
 });
 
 suite('archive tests', function() {
-	test('compressed archive test', function(done) {
+	test('extract from compressed archive', function(done) {
 		tika.text('test/data/archive/files.zip', function(err, text) {
 			assert.ifError(err);
 			assert.equal(text.trim(), 'file1.txt\nSome text 1.\n\n\n\n\nfile2.txt\nSome text 2.\n\n\n\n\nfile3.txt\nSome text 3.');
@@ -310,7 +310,15 @@ suite('archive tests', function() {
 		});
 	});
 
-	test('twice compressed archive test', function(done) {
+	test('detect compressed archive content-type', function(done) {
+		tika.contentType('test/data/archive/files.zip', function(err, contentType) {
+			assert.ifError(err);
+			assert.equal(contentType, 'application/zip');
+			done();
+		});
+	});
+
+	test('extract from twice compressed archive', function(done) {
 		tika.text('test/data/archive/files-files.zip', function(err, text) {
 			assert.ifError(err);
 			assert.equal(text.trim(), 'file4.txt\nSome text 4.\n\n\n\n\nfile5.txt\nSome text 5.\n\n\n\n\nfile6.txt\nSome text 6.\n\n\n\n\nfiles.zip\n\n\nfile1.txt\n\nSome text 1.\n\n\n\n\n\n\n\nfile2.txt\n\nSome text 2.\n\n\n\n\n\n\n\nfile3.txt\n\nSome text 3.');
