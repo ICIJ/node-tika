@@ -187,3 +187,68 @@ exports.getText = function(filePath, contentType, cb) {
 		outputStream.toString('UTF-8', cb);
 	});
 };
+
+exports.getMeta = function(filePath, contentType, cb) {
+	async.waterfall([
+		createParser,
+
+		function(parser, cb) {
+			java.newInstance('org.apache.tika.metadata.Metadata', function(err, metadata) {
+				cb(err, parser, metadata);
+			});
+		},
+
+		function(parser, metadata, cb) {
+			fillMetadata(parser, metadata, contentType, path.basename(filePath), function(err) {
+				cb(err, parser, metadata);
+			});
+		},
+
+		function(parser, metadata, cb) {
+			java.newInstance('java.io.FileInputStream', filePath, function(err, fileInputStream) {
+				cb(err, parser, metadata, fileInputStream);
+			});
+		},
+
+		function(parser, metadata, fileInputStream, cb) {
+			java.newInstance('org.xml.sax.helpers.DefaultHandler', function(err, defaultHandler) {
+				cb(err, parser, metadata, fileInputStream, defaultHandler);
+			});
+		},
+
+		function(parser, metadata, fileInputStream, defaultHandler, cb) {
+			parser.parse(fileInputStream, defaultHandler, metadata, function(err) {
+				metadata.names(function(err, names) {
+					cb(err, metadata, names);
+				});
+			});
+		},
+
+		function(metadata, names, cb) {
+			var queue, list = {};
+
+			if (!names.length) {
+				return cb();
+			}
+
+			queue = async.queue(function(name, cb) {
+				metadata.getValues(name, function(err, values) {
+					list[name] = values;
+					cb(err);
+				});
+			}, 1);
+
+			queue.drain = function() {
+				cb(null, list);
+			};
+
+			queue.push(names, function(err) {
+				if (err) {
+					queue.drain = null;
+					queue.tasks.length = 0;
+					cb(err);
+				}
+			});
+		}
+	], cb);
+};
