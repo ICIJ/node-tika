@@ -4,17 +4,25 @@ JAVAS := $(shell ls java/cg/m/nodejs/tika/*.java)
 
 install: node_modules
 
-update: jar/vendor/tika-server-1.5-SNAPSHOT.jar jar/Tika.jar 
+update: update-tika jar/vendor/tika-server-1.5-SNAPSHOT.jar jar/Tika.jar
 
 jar/Tika.jar: $(JAVAS) build/java
 	javac -d build/java -cp build/tika/tika-core/target/tika-core-1.5-SNAPSHOT.jar:build/tika/tika-core/target/tika-parsers-1.5-SNAPSHOT.jar $(JAVAS)
 	cd build/java && jar cvf ../../$@ -C . .
 
-jar/vendor/tika-server-1.5-SNAPSHOT.jar: build/tika
-	cp build/tika/tika-server/target/tika-server-1.5-SNAPSHOT.jar $@
+jar/vendor/tika-server-1.5-SNAPSHOT.jar: build/tika/tika-server/target/tika-server-1.5-SNAPSHOT.jar
+	cp $< $@
 
-build/tika:
-	cd build/tika && git pull && mvn clean && mvn install
+build/tika/tika-server/target/tika-server-1.5-SNAPSHOT.jar: build/tika
+	 cd build/tika && mvn clean && mvn install
+
+update-tika build/tika:
+	if [ ! -d build/tika ]; then \
+		git clone git://git.apache.org/tika.git build/tika; \
+	else \
+		cd build/tika && git pull; \
+		touch .; \
+	fi
 
 build/java:
 	if [ ! -d $@ ]; then \
@@ -28,4 +36,4 @@ node_modules: package.json
 test: node_modules
 	./node_modules/.bin/mocha --timeout 30000 --reporter spec --check-leaks --ui tdd --recursive
 
-.PHONY: install update test
+.PHONY: install update update-tika test
