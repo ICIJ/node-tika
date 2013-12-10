@@ -31,6 +31,17 @@ suite('document tests', function() {
 		});
 	});
 
+	test('extract meta from doc', function(done) {
+		tika.meta('test/data/file.doc', null, function(err, meta) {
+			assert.ifError(err);
+			assert.ok(meta);
+			assert.deepEqual(meta.resourceName, ['file.doc']);
+			assert.deepEqual(meta['Content-Type'], ['application/msword']);
+			assert.deepEqual(meta['dcterms:created'], ['2013-12-06T21:15:26Z']);
+			done();
+		});
+	});
+
 	test('extract from extensionless doc', function(done) {
 		tika.text('test/data/extensionless/doc', null, function(err, text) {
 			assert.ifError(err);
@@ -47,10 +58,32 @@ suite('document tests', function() {
 		});
 	});
 
+	test('extract meta from docx', function(done) {
+		tika.meta('test/data/file.docx', null, function(err, meta) {
+			assert.ifError(err);
+			assert.ok(meta);
+			assert.deepEqual(meta.resourceName, ['file.docx']);
+			assert.deepEqual(meta['Content-Type'], ['application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
+			assert.deepEqual(meta['Application-Name'], ['LibreOffice/4.1.3.2$MacOSX_x86 LibreOffice_project/70feb7d99726f064edab4605a8ab840c50ec57a']);
+			done();
+		});
+	});
+
 	test('extract from extensionless docx', function(done) {
 		tika.text('test/data/extensionless/docx', null, function(err, text) {
 			assert.ifError(err);
 			assert.equal(text, 'Just some text.\n');
+			done();
+		});
+	});
+
+	test('extract meta from extensionless docx', function(done) {
+		tika.meta('test/data/extensionless/docx', null, function(err, meta) {
+			assert.ifError(err);
+			assert.ok(meta);
+			assert.deepEqual(meta.resourceName, ['docx']);
+			assert.deepEqual(meta['Content-Type'], ['application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
+			assert.deepEqual(meta['Application-Name'], ['LibreOffice/4.1.3.2$MacOSX_x86 LibreOffice_project/70feb7d99726f064edab4605a8ab840c50ec57a']);
 			done();
 		});
 	});
@@ -63,6 +96,17 @@ suite('document tests', function() {
 		});
 	});
 
+	test('extract meta from pdf', function(done) {
+		tika.meta('test/data/file.pdf', null, function(err, meta) {
+			assert.ifError(err);
+			assert.ok(meta);
+			assert.deepEqual(meta.resourceName, ['file.pdf']);
+			assert.deepEqual(meta['Content-Type'], ['application/pdf']);
+			assert.deepEqual(meta.producer, ['LibreOffice 4.1']);
+			done();
+		});
+	});
+
 	test('extract from extensionless pdf', function(done) {
 		tika.text('test/data/extensionless/pdf', null, function(err, text) {
 			assert.ifError(err);
@@ -71,10 +115,32 @@ suite('document tests', function() {
 		});
 	});
 
+	test('extract meta from extensionless pdf', function(done) {
+		tika.meta('test/data/extensionless/pdf', null, function(err, meta) {
+			assert.ifError(err);
+			assert.ok(meta);
+			assert.deepEqual(meta.resourceName, ['pdf']);
+			assert.deepEqual(meta['Content-Type'], ['application/pdf']);
+			assert.deepEqual(meta.producer, ['LibreOffice 4.1']);
+			done();
+		});
+	});
+
 	test('extract from protected pdf', function(done) {
 		tika.text('test/data/protected/file.pdf', null, function(err, text) {
 			assert.ifError(err);
 			assert.equal(text.trim(), 'Just some text.');
+			done();
+		});
+	});
+
+	test('extract meta from protected pdf', function(done) {
+		tika.meta('test/data/protected/file.pdf', null, function(err, meta) {
+			assert.ifError(err);
+			assert.ok(meta);
+			assert.deepEqual(meta.resourceName, ['file.pdf']);
+			assert.deepEqual(meta['Content-Type'], ['application/pdf']);
+			assert.deepEqual(meta.producer, ['LibreOffice 4.1']);
 			done();
 		});
 	});
@@ -127,10 +193,32 @@ suite('image tests', function() {
 		});
 	});
 
+	test('extract meta from gif', function(done) {
+		tika.meta('test/data/file.gif', null, function(err, meta) {
+			assert.ifError(err);
+			assert.ok(meta);
+			assert.deepEqual(meta.resourceName, ['file.gif']);
+			assert.deepEqual(meta['Content-Type'], ['image/gif']);
+			assert.deepEqual(meta['Dimension ImageOrientation'], ['Normal']);
+			done();
+		});
+	});
+
 	test('extract from extensionless gif', function(done) {
 		tika.text('test/data/extensionless/gif', null, function(err, text) {
 			assert.ifError(err);
 			assert.equal(text, '');
+			done();
+		});
+	});
+
+	test('extract meta from extensionless gif', function(done) {
+		tika.meta('test/data/extensionless/gif', null, function(err, meta) {
+			assert.ifError(err);
+			assert.ok(meta);
+			assert.deepEqual(meta.resourceName, ['gif']);
+			assert.deepEqual(meta['Content-Type'], ['image/gif']);
+			assert.deepEqual(meta['Dimension ImageOrientation'], ['Normal']);
 			done();
 		});
 	});
