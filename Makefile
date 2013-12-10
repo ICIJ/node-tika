@@ -1,19 +1,22 @@
 .DELETE_ON_ERROR:
 
 JAVAS := $(shell ls java/cg/m/nodejs/tika/*.java)
+CORE_JAR := build/tika/tika-core/target/tika-core-1.5-SNAPSHOT.jar
+PARSERS_JAR := build/tika/tika-core/target/tika-parsers-1.5-SNAPSHOT.jar
+SERVER_JAR := build/tika/tika-server/target/tika-server-1.5-SNAPSHOT.jar
 
 install: node_modules
 
 update: update-tika jar/vendor/tika-server-1.5-SNAPSHOT.jar jar/Tika.jar
 
-jar/Tika.jar: $(JAVAS) build/java
-	javac -d build/java -cp build/tika/tika-core/target/tika-core-1.5-SNAPSHOT.jar:build/tika/tika-core/target/tika-parsers-1.5-SNAPSHOT.jar $(JAVAS)
+jar/Tika.jar: $(CORE_JAR) $(PARSERS_JAR) $(JAVAS) build/java
+	javac -d build/java -cp $(CORE_JAR):$(PARSERS_JAR) $(JAVAS)
 	cd build/java && jar cvf ../../$@ -C . .
 
-jar/vendor/tika-server-1.5-SNAPSHOT.jar: build/tika/tika-server/target/tika-server-1.5-SNAPSHOT.jar
+jar/vendor/tika-server-1.5-SNAPSHOT.jar: $(SERVER_JAR)
 	cp $< $@
 
-build/tika/tika-server/target/tika-server-1.5-SNAPSHOT.jar: build/tika
+$(SERVER_JAR) $(CORE_JAR) $(PARSERS_JAR): build/tika
 	 cd build/tika && mvn clean && mvn install
 
 update-tika build/tika:
