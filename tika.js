@@ -114,7 +114,7 @@ function fillMetadata(parser, metadata, contentType, fileName, cb) {
 	], cb);
 }
 
-exports.getText = function(filePath, contentType, cb) {
+exports.text = function(filePath, contentType, cb) {
 	async.waterfall([
 		createParser,
 
@@ -188,7 +188,7 @@ exports.getText = function(filePath, contentType, cb) {
 	});
 };
 
-exports.getMeta = function(filePath, contentType, cb) {
+exports.meta = function(filePath, contentType, cb) {
 	async.waterfall([
 		createParser,
 
