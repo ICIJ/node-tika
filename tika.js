@@ -114,6 +114,28 @@ function fillMetadata(parser, metadata, contentType, fileName, cb) {
 	], cb);
 }
 
+function detectCharset(tikaInputStream, cb) {
+	async.waterfall([
+		function(cb) {
+			java.newInstance('org.apache.tika.detect.AutoDetectReader', tikaInputStream, function(err, reader) {
+				cb(err, reader);
+			});
+		},
+
+		function(reader, cb) {
+			reader.getCharset(function(err, charset) {
+				cb(err, charset);
+			});
+		},
+
+		function(charset, cb) {
+			charset.toString(function(err, charset) {
+				cb(err, charset);
+			});
+		}
+	], cb);
+}
+
 exports.text = function(filePath, contentType, cb) {
 	if (arguments.length < 3) {
 		cb = contentType;
@@ -323,19 +345,7 @@ exports.contentType = function(filePath, withCharset, cb) {
 
 	if (withCharset) {
 		waterfall.push(function(tikaInputStream, contentType, cb) {
-			java.newInstance('org.apache.tika.detect.AutoDetectReader', tikaInputStream, function(err, reader) {
-				cb(err, tikaInputStream, contentType, reader);
-			});
-		},
-
-		function(tikaInputStream, contentType, reader, cb) {
-			reader.getCharset(function(err, charset) {
-				cb(err, tikaInputStream, contentType, charset);
-			});
-		},
-
-		function(tikaInputStream, contentType, charset, cb) {
-			charset.toString(function(err, charset) {
+			detectCharset(tikaInputStream, function(err, charset) {
 				cb(err, tikaInputStream, contentType, charset);
 			});
 		});
