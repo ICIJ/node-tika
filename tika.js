@@ -244,6 +244,8 @@ exports.getMeta = function(filePath, contentType, cb) {
 
 			queue.push(names, function(err) {
 				if (err) {
+
+					// Bail if there's an error - fail fast rather than silently.
 					queue.drain = null;
 					queue.tasks.length = 0;
 					cb(err);
