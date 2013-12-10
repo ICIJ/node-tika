@@ -178,7 +178,9 @@ exports.text = function(filePath, contentType, cb) {
 			});
 		}
 	], function(err, outputStream, tikaInputStream) {
-		tikaInputStream.close();
+		if (tikaInputStream) {
+			tikaInputStream.close();
+		}
 
 		if (err) {
 			return cb(err);
@@ -253,4 +255,58 @@ exports.meta = function(filePath, contentType, cb) {
 			});
 		}
 	], cb);
+};
+
+exports.contentType = function(filePath, cb) {
+	async.waterfall([
+		function(cb) {
+			java.newInstance('org.apache.tika.config.TikaConfig', cb);
+		},
+
+		function(config, cb) {
+			config.getDetector(cb);
+		},
+
+		function(detector, cb) {
+			java.newInstance('java.io.FileInputStream', filePath, function(err, fileInputStream) {
+				cb(err, detector, fileInputStream);
+			});
+		},
+
+		function(detector, fileInputStream, cb) {
+			TikaInputStream.get(fileInputStream, function(err, tikaInputStream) {
+				cb(err, detector, tikaInputStream);
+			});
+		},
+
+		function(detector, tikaInputStream, cb) {
+			java.newInstance('org.apache.tika.metadata.Metadata', function(err, metadata) {
+				cb(err, detector, tikaInputStream, metadata);
+			});
+		},
+
+		function(detector, tikaInputStream, metadata, cb) {
+			metadata.add(TikaMetadataKeys.RESOURCE_NAME_KEY, filePath, function(err) {
+				cb(err, detector, tikaInputStream, metadata);
+			});
+		},
+
+		function(detector, tikaInputStream, metadata, cb) {
+			detector.detect(tikaInputStream, metadata, function(err, mediaType) {
+				cb(err, tikaInputStream, mediaType);
+			});
+		},
+
+		function(tikaInputStream, mediaType, cb) {
+			mediaType.toString(function(err, contentType) {
+				cb(err, tikaInputStream, contentType);
+			});
+		}
+	], function(err, tikaInputStream, contentType) {
+		if (tikaInputStream) {
+			tikaInputStream.close();
+		}
+
+		return cb(err, contentType);
+	});
 };

@@ -7,10 +7,29 @@ var assert = require('assert');
 var tika = require('../');
 
 suite('document tests', function() {
+	test('text content-type', function(done) {
+		tika.contentType('test/data/file.txt', function(err, contentType) {
+			assert.ifError(err);
+			assert.equal(contentType, 'text/plain');
+			done();
+		});
+	});
+
 	test('extract from txt', function(done) {
 		tika.text('test/data/file.txt', null, function(err, text) {
 			assert.ifError(err);
 			assert.equal(text, 'Just some text.\n\n');
+			done();
+		});
+	});
+
+	test('extract meta from txt', function(done) {
+		tika.meta('test/data/file.txt', null, function(err, meta) {
+			assert.ifError(err);
+			assert.ok(meta);
+			assert.deepEqual(meta.resourceName, ['file.txt']);
+			assert.deepEqual(meta['Content-Type'], ['text/plain; charset=ISO-8859-1']);
+			assert.deepEqual(meta['Content-Encoding'], ['ISO-8859-1']);
 			done();
 		});
 	});
