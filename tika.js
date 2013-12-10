@@ -115,6 +115,11 @@ function fillMetadata(parser, metadata, contentType, fileName, cb) {
 }
 
 exports.text = function(filePath, contentType, cb) {
+	if (arguments.length < 3) {
+		cb = contentType;
+		contentType = null;
+	}
+
 	async.waterfall([
 		createParser,
 
@@ -191,6 +196,11 @@ exports.text = function(filePath, contentType, cb) {
 };
 
 exports.meta = function(filePath, contentType, cb) {
+	if (arguments.length < 3) {
+		cb = contentType;
+		contentType = null;
+	}
+
 	async.waterfall([
 		createParser,
 
