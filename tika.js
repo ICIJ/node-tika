@@ -257,8 +257,15 @@ exports.meta = function(filePath, contentType, cb) {
 	], cb);
 };
 
-exports.contentType = function(filePath, cb) {
-	async.waterfall([
+exports.contentType = function(filePath, withCharset, cb) {
+	var waterfall;
+
+	if (arguments.length < 3) {
+		cb = withCharset;
+		withCharset = false;
+	}
+
+	waterfall = [
 		function(cb) {
 			java.newInstance('org.apache.tika.config.TikaConfig', cb);
 		},
@@ -302,9 +309,35 @@ exports.contentType = function(filePath, cb) {
 				cb(err, tikaInputStream, contentType);
 			});
 		}
-	], function(err, tikaInputStream, contentType) {
+	];
+
+	if (withCharset) {
+		waterfall.push(function(tikaInputStream, contentType, cb) {
+			java.newInstance('org.apache.tika.detect.AutoDetectReader', tikaInputStream, function(err, reader) {
+				cb(err, tikaInputStream, contentType, reader);
+			});
+		},
+
+		function(tikaInputStream, contentType, reader, cb) {
+			reader.getCharset(function(err, charset) {
+				cb(err, tikaInputStream, contentType, charset);
+			});
+		},
+
+		function(tikaInputStream, contentType, charset, cb) {
+			charset.toString(function(err, charset) {
+				cb(err, tikaInputStream, contentType, charset);
+			});
+		});
+	}
+
+	async.waterfall(waterfall, function(err, tikaInputStream, contentType, charset) {
 		if (tikaInputStream) {
 			tikaInputStream.close();
+		}
+
+		if (contentType && charset) {
+			contentType = contentType + '; charset=' + charset;
 		}
 
 		return cb(err, contentType);

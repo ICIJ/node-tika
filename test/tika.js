@@ -15,6 +15,14 @@ suite('document tests', function() {
 		});
 	});
 
+	test('text content-type and charset', function(done) {
+		tika.contentType('test/data/file.txt', true, function(err, contentType) {
+			assert.ifError(err);
+			assert.equal(contentType, 'text/plain; charset=ISO-8859-1');
+			done();
+		});
+	});
+
 	test('extract from txt', function(done) {
 		tika.text('test/data/file.txt', null, function(err, text) {
 			assert.ifError(err);
