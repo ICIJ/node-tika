@@ -127,55 +127,88 @@ function fillMetadata(parser, contentType, filePath, cb) {
 	], cb);
 }
 
-function extractText(parser, metadata, inputStream, cb) {
+function extractText(filePath, contentType, cb) {
 	async.waterfall([
-		function(cb) {
+		createParser,
+
+		function(parser, cb) {
+			fillMetadata(parser, contentType, filePath, function(err, metadata) {
+				cb(err, parser, metadata);
+			});
+		},
+
+		function(parser, metadata, cb) {
+			createInputStream(filePath, function(err, inputStream) {
+				cb(err, parser, metadata, inputStream);
+			});
+		},
+
+		function(parser, metadata, inputStream, cb) {
 			java.newInstance('java.io.ByteArrayOutputStream', function(err, outputStream) {
-				cb(err, outputStream);
+				cb(err, parser, metadata, inputStream, outputStream);
 			});
 		},
 
-		function(outputStream, cb) {
+		function(parser, metadata, inputStream, outputStream, cb) {
 			java.newInstance('java.io.OutputStreamWriter', outputStream, function(err, writer) {
-				cb(err, outputStream, writer);
+				cb(err, parser, metadata, inputStream, outputStream, writer);
 			});
 		},
 
-		function(outputStream, writer, cb) {
+		function(parser, metadata, inputStream, outputStream, writer, cb) {
 			java.newInstance('cg.m.nodetika.WriteOutHelper', writer, function(err, writerHelper) {
-				cb(err, outputStream, writerHelper);
+				cb(err, parser, metadata, inputStream, outputStream, writerHelper);
 			});
 		},
 
-		function(outputStream, writerHelper, cb) {
+		function(parser, metadata, inputStream, outputStream, writerHelper, cb) {
 			java.newInstance('org.apache.tika.sax.BodyContentHandler', writerHelper, function(err, body) {
-				cb(err, parser, outputStream, body);
+				cb(err, parser, metadata, inputStream, outputStream, body);
 			});
 		},
 
-		function(parser, outputStream, body, cb) {
+		function(parser, metadata, inputStream, outputStream, body, cb) {
 			inputStream.getFile(function(err) {
-				cb(err, parser, outputStream, body);
+				cb(err, parser, metadata, inputStream, outputStream, body);
 			});
 		},
 
-		function(parser, outputStream, body, cb) {
+		function(parser, metadata, inputStream, outputStream, body, cb) {
 			parser.parse(inputStream, body, metadata, function(err) {
-				cb(err, outputStream);
+				cb(err, parser, metadata, inputStream, outputStream);
 			});
 		}
-	], function(err, outputStream) {
+	], function(err, parser, metadata, inputStream, outputStream) {
+		if (inputStream) {
+			inputStream.close();
+		}
+
 		if (err) {
-			return cb(err);
+			cb(err);
+			return;
 		}
 
 		outputStream.toString('UTF-8', cb);
 	});
 }
 
-function extractMeta(parser, metadata, inputStream, cb) {
+function extractMeta(filePath, contentType, cb) {
 	async.waterfall([
-		function(cb) {
+		createParser,
+
+		function(parser, cb) {
+			fillMetadata(parser, contentType, filePath, function(err, metadata) {
+				cb(err, parser, metadata);
+			});
+		},
+
+		function(parser, metadata, cb) {
+			createInputStream(filePath, function(err, inputStream) {
+				cb(err, parser, metadata, inputStream);
+			});
+		},
+
+		function(parser, metadata, inputStream, cb) {
 			java.newInstance('org.xml.sax.helpers.DefaultHandler', function(err, defaultHandler) {
 				cb(err, parser, metadata, inputStream, defaultHandler);
 			});
@@ -184,16 +217,16 @@ function extractMeta(parser, metadata, inputStream, cb) {
 		function(parser, metadata, inputStream, defaultHandler, cb) {
 			parser.parse(inputStream, defaultHandler, metadata, function(err) {
 				metadata.names(function(err, names) {
-					cb(err, metadata, names);
+					cb(err, parser, metadata, inputStream, names);
 				});
 			});
 		},
 
-		function(metadata, names, cb) {
+		function(parser, metadata, inputStream, names, cb) {
 			var queue, list = {};
 
 			if (!names.length) {
-				return cb();
+				return cb(null, parser, metadata, inputStream, names);
 			}
 
 			queue = async.queue(function(name, cb) {
@@ -204,7 +237,7 @@ function extractMeta(parser, metadata, inputStream, cb) {
 			}, 1);
 
 			queue.drain = function() {
-				cb(null, list);
+				cb(null, parser, metadata, inputStream, list);
 			};
 
 			queue.push(names, function(err) {
@@ -213,11 +246,25 @@ function extractMeta(parser, metadata, inputStream, cb) {
 					// Bail if there's an error - fail fast rather than silently.
 					queue.drain = null;
 					queue.tasks.length = 0;
-					cb(err);
+					cb(err, parser, metadata, inputStream, list);
 				}
 			});
 		}
-	], cb);
+	], function(err, parser, metadata, inputStream, list) {
+		var key;
+
+		if (inputStream) {
+			inputStream.close();
+		}
+
+		if (list) {
+			for (key in list) {
+				list[key] = list[key][0];
+			}
+		}
+
+		cb(err, list);
+	});
 }
 
 function detectCharset(inputStream, cb) {
@@ -242,85 +289,22 @@ function detectCharset(inputStream, cb) {
 	], cb);
 }
 
-function extract(filePath, contentType, withText, withMeta, cb) {
-	async.waterfall([
-		createParser,
-
-		function(parser, cb) {
-			fillMetadata(parser, contentType, filePath, function(err, metadata) {
-				cb(err, parser, metadata);
-			});
-		},
-
-		function(parser, metadata, cb) {
-			createInputStream(filePath, function(err, inputStream) {
-				cb(err, parser, metadata, inputStream);
-			});
-		},
-
-		function(parser, metadata, inputStream, cb) {
-			if (withMeta && withText) {
-				inputStream.mark(0, function(err) {
-					cb(err, parser, metadata, inputStream);
-				});
-			} else {
-				cb(null, parser, metadata, inputStream);
-			}
-		},
-
-		function(parser, metadata, inputStream, cb) {
-			if (withMeta) {
-				extractMeta(parser, metadata, inputStream, function(err, list) {
-					cb(err, parser, metadata, inputStream, list);
-				});
-			} else {
-				cb(null, parser, metadata, inputStream, null);
-			}
-		},
-
-		function(parser, metadata, inputStream, list, cb) {
-			if (withMeta && withText) {
-				inputStream.reset(function(err) {
-					cb(err, parser, metadata, inputStream, list);
-				});
-			} else {
-				cb(null, parser, metadata, inputStream, list);
-			}
-		},
-
-		function(parser, metadata, inputStream, list, cb) {
-			if (withText) {
-				extractText(parser, metadata, inputStream, function(err, text) {
-					cb(err, parser, metadata, inputStream, list, text);
-				});
-			} else {
-				cb(null, parser, metadata, inputStream, list, null);
-			}
-		}
-	], function(err, parser, metadata, inputStream, list, text) {
-		var key;
-
-		if (inputStream) {
-			inputStream.close();
-		}
-
-		if (list) {
-			for (key in list) {
-				list[key] = list[key][0];
-			}
-		}
-
-		cb(err, text, list);
-	});
-}
-
 exports.extract = function(filePath, contentType, cb) {
 	if (arguments.length < 3) {
 		cb = contentType;
 		contentType = null;
 	}
 
-	extract(filePath, contentType, true, true, cb);
+	extractMeta(filePath, contentType, function(err, meta) {
+		if (err) {
+			cb(err);
+			return;
+		}
+
+		extractText(filePath, contentType, function(err, text) {
+			cb(err, text, meta);
+		});
+	});
 };
 
 exports.text = function(filePath, contentType, cb) {
@@ -329,7 +313,7 @@ exports.text = function(filePath, contentType, cb) {
 		contentType = null;
 	}
 
-	extract(filePath, contentType, true, false, function(err, text) {
+	extractText(filePath, contentType, function(err, text) {
 		cb(err, text);
 	});
 };
@@ -340,7 +324,7 @@ exports.meta = function(filePath, contentType, cb) {
 		contentType = null;
 	}
 
-	extract(filePath, contentType, false, true, function(err, text, list) {
+	extractMeta(filePath, contentType, function(err, list) {
 		cb(err, list);
 	});
 };
