@@ -1,0 +1,81 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.apache.tika</groupId>
+		<artifactId>tika-parent</artifactId>
+		<version>1.5-SNAPSHOT</version>
+		<relativePath>../tika-parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>node-tika</artifactId>
+	<name>Tika Bindings for Node.js</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>tika-parsers</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.5</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<directory>build/node-tika</directory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>
+								false
+							</createDependencyReducedPom>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+										<exclude>META-INF/*.txt</exclude>
+										<exclude>META-INF/ASL2.0</exclude>
+										<exclude>META-INF/DEPENDENCIES</exclude>
+										<exclude>META-INF/LICENSE</exclude>
+										<exclude>META-INF/NOTICE</exclude>
+										<exclude>META-INF/README</exclude>
+										<exclude>LICENSE.txt</exclude>
+										<exclude>NOTICE.txt</exclude>
+										<exclude>CHANGES</exclude>
+										<exclude>README</exclude>
+										<exclude>builddef.lst</exclude>
+										<!-- TIKA-763: Workaround to avoid including LGPL classes -->
+										<exclude>ucar/nc2/iosp/fysat/Fysat*.class</exclude>
+										<exclude>ucar/nc2/dataset/transform/VOceanSG1*class</exclude>
+										<exclude>ucar/unidata/geoloc/vertical/OceanSG*.class</exclude>
+									</excludes>
+								</filter>
+							</filters>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<outputDirectory>jar</outputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

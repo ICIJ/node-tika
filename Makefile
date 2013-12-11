@@ -1,24 +1,19 @@
 .DELETE_ON_ERROR:
 
-JAVAS := $(shell ls java/cg/m/nodetika/*.java)
-CORE_JAR := build/tika/tika-core/target/tika-core-1.5-SNAPSHOT.jar
+JAVAS := $(shell ls src/main/java/cg/m/nodetika/*.java)
+JAR := jar/node-tika-1.5-SNAPSHOT.jar
 PARSERS_JAR := build/tika/tika-core/target/tika-parsers-1.5-SNAPSHOT.jar
-SERVER_JAR := build/tika/tika-server/target/tika-server-1.5-SNAPSHOT.jar
 
 install: node_modules
 
-update: update-tika jar/vendor/tika-server-1.5-SNAPSHOT.jar jar/NodeTika.jar
+update: update-tika ($JAR)
 
-jar/NodeTika.jar: $(CORE_JAR) $(PARSERS_JAR) $(JAVAS) build/java
-	javac -d build/java -cp $(CORE_JAR):$(PARSERS_JAR) $(JAVAS)
-	cd build/java && jar cvf ../../$@ -C . .
+($JAR): $(JAVAS) build/java
+	mvn install
 
-jar/vendor/tika-server-1.5-SNAPSHOT.jar: $(SERVER_JAR)
-	cp $< $@
-
-$(SERVER_JAR) $(CORE_JAR) $(PARSERS_JAR): build/tika
-	 cd build/tika && mvn clean && mvn install -Dmaven.test.skip=true
-	 touch build/tika
+$(PARSERS_JAR): build/tika
+	 cd $< && mvn clean && mvn install -Dmaven.test.skip=true
+	 touch $<
 
 update-tika build/tika:
 	if [ ! -d build/tika ]; then \

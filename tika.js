@@ -6,11 +6,7 @@ var java = require('java');
 var path = require('path');
 var async = require('async');
 
-java.classpath.push('jar/NodeTika.jar');
-
-// TODO: Instead of using tika-server JAR, copy tika-server's pom.xml here and use maven to install deps and create Tika.jar.
-java.classpath.push('jar/vendor/tika-server-1.5-SNAPSHOT.jar');
-
+java.classpath.push('jar/node-tika-1.5-SNAPSHOT.jar');
 java.options.push('-Djava.awt.headless=true');
 
 var TikaInputStream = java.import('org.apache.tika.io.TikaInputStream');
