@@ -6,7 +6,7 @@ var java = require('java');
 var path = require('path');
 var async = require('async');
 
-java.classpath.push('jar/Tika.jar');
+java.classpath.push('jar/NodeTika.jar');
 
 // TODO: Instead of using tika-server JAR, copy tika-server's pom.xml here and use maven to install deps and create Tika.jar.
 java.classpath.push('jar/vendor/tika-server-1.5-SNAPSHOT.jar');
@@ -18,11 +18,7 @@ var MediaType = java.import('org.apache.tika.mime.MediaType');
 var TikaMetadataKeys = java.import('org.apache.tika.metadata.TikaMetadataKeys');
 var HttpHeaders = java.import('org.apache.tika.metadata.HttpHeaders');
 
-var ShutdownHookHelper = java.import('cg.m.nodejs.tika.ShutdownHookHelper');
-var DetectorHelper = java.import('cg.m.nodejs.tika.DetectorHelper');
-var WriteOutHelper = java.import('cg.m.nodejs.tika.WriteOutHelper');
-
-ShutdownHookHelper.setShutdownHookSync(java.newProxy('java.lang.Runnable', {
+java.callStaticMethodSync('cg.m.nodetika.ShutdownHookHelper', 'setShutdownHook', java.newProxy('java.lang.Runnable', {
 	run: function() {}
 }));
 
@@ -115,7 +111,7 @@ function fillMetadata(parser, metadata, contentType, fileName, cb) {
 				return cb(null, parser, null);
 			}
 
-			java.newInstance('cg.m.nodejs.tika.DetectorHelper', contentType, detector, metadata, function(err, detectorHelper) {
+			java.newInstance('cg.m.nodetika.DetectorHelper', contentType, detector, metadata, function(err, detectorHelper) {
 				cb(err, parser, detectorHelper);
 			});
 		},
@@ -174,7 +170,7 @@ exports.text = function(filePath, contentType, cb) {
 		},
 
 		function(parser, outputStream, writer, cb) {
-			java.newInstance('cg.m.nodejs.tika.WriteOutHelper', writer, function(err, writerHelper) {
+			java.newInstance('cg.m.nodetika.WriteOutHelper', writer, function(err, writerHelper) {
 				cb(err, parser, outputStream, writerHelper);
 			});
 		},
