@@ -17,9 +17,6 @@
 	"bugs": {
 		"url": "https://github.com/mattcg/dulce/issues"
 	},
-	"scripts": {
-		"test": "make test"
-	},
 	"licenses": [
 		{
 			"type": "MIT",
