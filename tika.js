@@ -8,17 +8,12 @@ var async = require('async');
 
 java.classpath.push(__dirname + '/jar/node-tika-1.5-SNAPSHOT.jar');
 java.options.push('-Djava.awt.headless=true');
+java.options.push('-Xrs');
 
 var TikaInputStream = java.import('org.apache.tika.io.TikaInputStream');
 var MediaType = java.import('org.apache.tika.mime.MediaType');
 var TikaMetadataKeys = java.import('org.apache.tika.metadata.TikaMetadataKeys');
 var HttpHeaders = java.import('org.apache.tika.metadata.HttpHeaders');
-
-java.callStaticMethodSync('cg.m.nodetika.ShutdownHookHelper', 'setShutdownHook', java.newProxy('java.lang.Runnable', {
-	run: function() {
-		process.exit(1);
-	}
-}));
 
 function createParser(cb) {
 	async.waterfall([
