@@ -39,4 +39,7 @@ node_modules: package.json
 test: node_modules
 	./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --timeout 3000 --reporter spec --check-leaks --ui tdd --recursive
 
-.PHONY: install update update-tika test
+clean:
+	rm -rf coverage build node_modules
+
+.PHONY: install update update-tika test clean
