@@ -46,6 +46,20 @@ suite('document tests', function() {
 		});
 	});
 
+	test('extract meta and text from txt', function(done) {
+		tika.extract('test/data/file.txt', function(err, text, meta) {
+			assert.ifError(err);
+			assert.equal(typeof text, 'string');
+			assert.equal(text, 'Just some text.\n\n');
+			assert.ok(meta);
+			assert.equal(typeof meta.resourceName[0], 'string');
+			assert.deepEqual(meta.resourceName, ['file.txt']);
+			assert.deepEqual(meta['Content-Type'], ['text/plain; charset=ISO-8859-1']);
+			assert.deepEqual(meta['Content-Encoding'], ['ISO-8859-1']);
+			done();
+		});
+	});
+
 	test('extract from extensionless txt', function(done) {
 		tika.text('test/data/extensionless/txt', function(err, text) {
 			assert.ifError(err);

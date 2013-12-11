@@ -14,9 +14,20 @@ Requires JDK 7. Run `node version` to check the version that `node-java` is usin
 var tika = require('tika');
 ```
 
+### tika.extract(filePath, [contentType,] cb) ###
+
+Extract both text and metadata from a file. Content type is optional but would help Tika in some cases.
+
+```javascript
+tika.extract('test/data/file.pdf', function(err, text, meta) {
+	assert.equal(text.trim(), 'Just some text.');
+	assert.deepEqual(meta.producer, ['LibreOffice 4.1']);
+});
+```
+
 ### tika.text(filePath, [contentType,] cb) ###
 
-Extract text from a file. Content type is optional but would help Tika in some cases.
+Extract text from a file.
 
 ```javascript
 tika.text('test/data/file.pdf', function(err, text) {
