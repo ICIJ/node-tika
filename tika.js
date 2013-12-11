@@ -241,19 +241,19 @@ exports.meta = function(filePath, contentType, cb) {
 		},
 
 		function(parser, metadata, cb) {
-			java.newInstance('java.io.FileInputStream', filePath, function(err, fileInputStream) {
-				cb(err, parser, metadata, fileInputStream);
+			createInputStream(filePath, function(err, inputStream) {
+				cb(err, parser, metadata, inputStream);
 			});
 		},
 
-		function(parser, metadata, fileInputStream, cb) {
+		function(parser, metadata, inputStream, cb) {
 			java.newInstance('org.xml.sax.helpers.DefaultHandler', function(err, defaultHandler) {
-				cb(err, parser, metadata, fileInputStream, defaultHandler);
+				cb(err, parser, metadata, inputStream, defaultHandler);
 			});
 		},
 
-		function(parser, metadata, fileInputStream, defaultHandler, cb) {
-			parser.parse(fileInputStream, defaultHandler, metadata, function(err) {
+		function(parser, metadata, inputStream, defaultHandler, cb) {
+			parser.parse(inputStream, defaultHandler, metadata, function(err) {
 				metadata.names(function(err, names) {
 					cb(err, metadata, names);
 				});
