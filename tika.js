@@ -296,13 +296,13 @@ function extract(filePath, contentType, withText, withMeta, cb) {
 		function(parser, metadata, inputStream, list, cb) {
 			if (withText) {
 				extractText(parser, metadata, inputStream, function(err, text) {
-					cb(err, inputStream, text, list);
+					cb(err, parser, metadata, inputStream, list, text);
 				});
 			} else {
-				cb(null, inputStream, null, list);
+				cb(null, parser, metadata, inputStream, list, null);
 			}
 		}
-	], function(err, inputStream, text, list) {
+	], function(err, parser, metadata, inputStream, list, text) {
 		if (inputStream) {
 			inputStream.close();
 		}
@@ -379,26 +379,26 @@ exports.contentType = function(filePath, withCharset, cb) {
 
 		function(detector, inputStream, metadata, cb) {
 			detector.detect(inputStream, metadata, function(err, mediaType) {
-				cb(err, inputStream, mediaType);
+				cb(err, detector, inputStream, mediaType);
 			});
 		},
 
-		function(inputStream, mediaType, cb) {
+		function(detector, inputStream, mediaType, cb) {
 			mediaType.toString(function(err, contentType) {
-				cb(err, inputStream, contentType);
+				cb(err, detector, inputStream, contentType);
 			});
 		}
 	];
 
 	if (withCharset) {
-		waterfall.push(function(inputStream, contentType, cb) {
+		waterfall.push(function(detector, inputStream, contentType, cb) {
 			detectCharset(inputStream, function(err, charset) {
-				cb(err, inputStream, contentType, charset);
+				cb(err, detector, inputStream, contentType, charset);
 			});
 		});
 	}
 
-	async.waterfall(waterfall, function(err, inputStream, contentType, charset) {
+	async.waterfall(waterfall, function(err, detector, inputStream, contentType, charset) {
 		if (inputStream) {
 			inputStream.close();
 		}
