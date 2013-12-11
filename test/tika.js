@@ -123,6 +123,14 @@ suite('document tests', function() {
 		});
 	});
 
+	test('detect content-type of pdf', function(done) {
+		tika.contentType('test/data/file.pdf', function(err, contentType) {
+			assert.ifError(err);
+			assert.equal(contentType, 'application/pdf');
+			done();
+		});
+	});
+
 	test('extract meta from pdf', function(done) {
 		tika.meta('test/data/file.pdf', function(err, meta) {
 			assert.ifError(err);
