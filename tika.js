@@ -303,8 +303,16 @@ function extract(filePath, contentType, withText, withMeta, cb) {
 			}
 		}
 	], function(err, parser, metadata, inputStream, list, text) {
+		var key;
+
 		if (inputStream) {
 			inputStream.close();
+		}
+
+		if (list) {
+			for (key in list) {
+				list[key] = list[key][0];
+			}
 		}
 
 		cb(err, text, list);

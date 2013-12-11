@@ -38,10 +38,10 @@ suite('document tests', function() {
 		tika.meta('test/data/file.txt', function(err, meta) {
 			assert.ifError(err);
 			assert.ok(meta);
-			assert.equal(typeof meta.resourceName[0], 'string');
-			assert.deepEqual(meta.resourceName, ['file.txt']);
-			assert.deepEqual(meta['Content-Type'], ['text/plain; charset=ISO-8859-1']);
-			assert.deepEqual(meta['Content-Encoding'], ['ISO-8859-1']);
+			assert.equal(typeof meta.resourceName, 'string');
+			assert.deepEqual(meta.resourceName, 'file.txt');
+			assert.deepEqual(meta['Content-Type'], 'text/plain; charset=ISO-8859-1');
+			assert.deepEqual(meta['Content-Encoding'], 'ISO-8859-1');
 			done();
 		});
 	});
@@ -52,10 +52,10 @@ suite('document tests', function() {
 			assert.equal(typeof text, 'string');
 			assert.equal(text, 'Just some text.\n\n');
 			assert.ok(meta);
-			assert.equal(typeof meta.resourceName[0], 'string');
-			assert.deepEqual(meta.resourceName, ['file.txt']);
-			assert.deepEqual(meta['Content-Type'], ['text/plain; charset=ISO-8859-1']);
-			assert.deepEqual(meta['Content-Encoding'], ['ISO-8859-1']);
+			assert.equal(typeof meta.resourceName, 'string');
+			assert.deepEqual(meta.resourceName, 'file.txt');
+			assert.deepEqual(meta['Content-Type'], 'text/plain; charset=ISO-8859-1');
+			assert.deepEqual(meta['Content-Encoding'], 'ISO-8859-1');
 			done();
 		});
 	});
@@ -80,9 +80,9 @@ suite('document tests', function() {
 		tika.meta('test/data/file.doc', function(err, meta) {
 			assert.ifError(err);
 			assert.ok(meta);
-			assert.deepEqual(meta.resourceName, ['file.doc']);
-			assert.deepEqual(meta['Content-Type'], ['application/msword']);
-			assert.deepEqual(meta['dcterms:created'], ['2013-12-06T21:15:26Z']);
+			assert.deepEqual(meta.resourceName, 'file.doc');
+			assert.deepEqual(meta['Content-Type'], 'application/msword');
+			assert.deepEqual(meta['dcterms:created'], '2013-12-06T21:15:26Z');
 			done();
 		});
 	});
@@ -107,9 +107,9 @@ suite('document tests', function() {
 		tika.meta('test/data/file.docx', function(err, meta) {
 			assert.ifError(err);
 			assert.ok(meta);
-			assert.deepEqual(meta.resourceName, ['file.docx']);
-			assert.deepEqual(meta['Content-Type'], ['application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
-			assert.deepEqual(meta['Application-Name'], ['LibreOffice/4.1.3.2$MacOSX_x86 LibreOffice_project/70feb7d99726f064edab4605a8ab840c50ec57a']);
+			assert.deepEqual(meta.resourceName, 'file.docx');
+			assert.deepEqual(meta['Content-Type'], 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+			assert.deepEqual(meta['Application-Name'], 'LibreOffice/4.1.3.2$MacOSX_x86 LibreOffice_project/70feb7d99726f064edab4605a8ab840c50ec57a');
 			done();
 		});
 	});
@@ -126,9 +126,9 @@ suite('document tests', function() {
 		tika.meta('test/data/extensionless/docx', function(err, meta) {
 			assert.ifError(err);
 			assert.ok(meta);
-			assert.deepEqual(meta.resourceName, ['docx']);
-			assert.deepEqual(meta['Content-Type'], ['application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
-			assert.deepEqual(meta['Application-Name'], ['LibreOffice/4.1.3.2$MacOSX_x86 LibreOffice_project/70feb7d99726f064edab4605a8ab840c50ec57a']);
+			assert.deepEqual(meta.resourceName, 'docx');
+			assert.deepEqual(meta['Content-Type'], 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+			assert.deepEqual(meta['Application-Name'], 'LibreOffice/4.1.3.2$MacOSX_x86 LibreOffice_project/70feb7d99726f064edab4605a8ab840c50ec57a');
 			done();
 		});
 	});
@@ -153,9 +153,9 @@ suite('document tests', function() {
 		tika.meta('test/data/file.pdf', function(err, meta) {
 			assert.ifError(err);
 			assert.ok(meta);
-			assert.deepEqual(meta.resourceName, ['file.pdf']);
-			assert.deepEqual(meta['Content-Type'], ['application/pdf']);
-			assert.deepEqual(meta.producer, ['LibreOffice 4.1']);
+			assert.deepEqual(meta.resourceName, 'file.pdf');
+			assert.deepEqual(meta['Content-Type'], 'application/pdf');
+			assert.deepEqual(meta.producer, 'LibreOffice 4.1');
 			done();
 		});
 	});
@@ -172,9 +172,9 @@ suite('document tests', function() {
 		tika.meta('test/data/extensionless/pdf', function(err, meta) {
 			assert.ifError(err);
 			assert.ok(meta);
-			assert.deepEqual(meta.resourceName, ['pdf']);
-			assert.deepEqual(meta['Content-Type'], ['application/pdf']);
-			assert.deepEqual(meta.producer, ['LibreOffice 4.1']);
+			assert.deepEqual(meta.resourceName, 'pdf');
+			assert.deepEqual(meta['Content-Type'], 'application/pdf');
+			assert.deepEqual(meta.producer, 'LibreOffice 4.1');
 			done();
 		});
 	});
@@ -191,9 +191,9 @@ suite('document tests', function() {
 		tika.meta('test/data/protected/file.pdf', function(err, meta) {
 			assert.ifError(err);
 			assert.ok(meta);
-			assert.deepEqual(meta.resourceName, ['file.pdf']);
-			assert.deepEqual(meta['Content-Type'], ['application/pdf']);
-			assert.deepEqual(meta.producer, ['LibreOffice 4.1']);
+			assert.deepEqual(meta.resourceName, 'file.pdf');
+			assert.deepEqual(meta['Content-Type'], 'application/pdf');
+			assert.deepEqual(meta.producer, 'LibreOffice 4.1');
 			done();
 		});
 	});
@@ -250,9 +250,9 @@ suite('image tests', function() {
 		tika.meta('test/data/file.gif', function(err, meta) {
 			assert.ifError(err);
 			assert.ok(meta);
-			assert.deepEqual(meta.resourceName, ['file.gif']);
-			assert.deepEqual(meta['Content-Type'], ['image/gif']);
-			assert.deepEqual(meta['Dimension ImageOrientation'], ['Normal']);
+			assert.deepEqual(meta.resourceName, 'file.gif');
+			assert.deepEqual(meta['Content-Type'], 'image/gif');
+			assert.deepEqual(meta['Dimension ImageOrientation'], 'Normal');
 			done();
 		});
 	});
@@ -269,9 +269,9 @@ suite('image tests', function() {
 		tika.meta('test/data/extensionless/gif', function(err, meta) {
 			assert.ifError(err);
 			assert.ok(meta);
-			assert.deepEqual(meta.resourceName, ['gif']);
-			assert.deepEqual(meta['Content-Type'], ['image/gif']);
-			assert.deepEqual(meta['Dimension ImageOrientation'], ['Normal']);
+			assert.deepEqual(meta.resourceName, 'gif');
+			assert.deepEqual(meta['Content-Type'], 'image/gif');
+			assert.deepEqual(meta['Dimension ImageOrientation'], 'Normal');
 			done();
 		});
 	});

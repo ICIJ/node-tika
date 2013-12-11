@@ -37,7 +37,7 @@ tika.text('test/data/file.pdf', function(err, text) {
 
 ### tika.meta(filePath, [contentType,] cb) ###
 
-Extract metadata from a file. Returns an object with values as arrays.
+Extract metadata from a file. Returns an object with names as keys.
 
 ```javascript
 tika.meta('test/data/file.pdf', function(err, meta) {
