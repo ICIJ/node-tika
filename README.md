@@ -60,6 +60,16 @@ tika.contentType('test/data/file.txt', true, function(err, charset) {
 });
 ```
 
+### tika.language(string, cb) ###
+
+Detect the language a given string is written in.
+
+```javascript
+tika.language('This is just some text in English.', function(err, language, reasonablyCertain) {
+	assert.equal(language, 'en');
+});
+```
+
 ## Credits and collaboration ##
 
 Developed by [Matthew Caruana Galizia](https://twitter.com/mcaruanagalizia). Requires plenty more development and maintenance. Please feel free to submit an issue or pull request.
