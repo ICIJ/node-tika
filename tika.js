@@ -6,7 +6,7 @@ var java = require('java');
 var path = require('path');
 var async = require('async');
 
-java.classpath.push('jar/node-tika-1.5-SNAPSHOT.jar');
+java.classpath.push(__dirname + '/jar/node-tika-1.5-SNAPSHOT.jar');
 java.options.push('-Djava.awt.headless=true');
 
 var TikaInputStream = java.import('org.apache.tika.io.TikaInputStream');
