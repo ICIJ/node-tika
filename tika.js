@@ -66,10 +66,16 @@ function createInputStream(filePath, cb) {
 	], cb);
 }
 
-function fillMetadata(parser, metadata, contentType, fileName, cb) {
+function fillMetadata(parser, contentType, filePath, cb) {
 	async.waterfall([
 		function(cb) {
-			metadata.set(TikaMetadataKeys.RESOURCE_NAME_KEY, fileName, function(err) {
+			java.newInstance('org.apache.tika.metadata.Metadata', function(err, metadata) {
+				cb(err, metadata);
+			});
+		},
+
+		function(metadata, cb) {
+			metadata.set(TikaMetadataKeys.RESOURCE_NAME_KEY, path.basename(filePath), function(err) {
 				cb(err, parser, metadata);
 			});
 		},
@@ -104,20 +110,22 @@ function fillMetadata(parser, metadata, contentType, fileName, cb) {
 
 		function(parser, metadata, detector, cb) {
 			if (!detector) {
-				return cb(null, parser, null);
+				return cb(null, parser, metadata, null);
 			}
 
 			java.newInstance('cg.m.nodetika.DetectorHelper', contentType, detector, metadata, function(err, detectorHelper) {
-				cb(err, parser, detectorHelper);
+				cb(err, parser, metadata, detectorHelper);
 			});
 		},
 
-		function(parser, detectorHelper, cb) {
+		function(parser, metadata, detectorHelper, cb) {
 			if (!detectorHelper) {
-				return cb();
+				return cb(null, metadata);
 			}
 
-			parser.setDetector(detectorHelper, cb);
+			parser.setDetector(detectorHelper, function(err) {
+				cb(err, metadata);
+			});
 		}
 	], cb);
 }
@@ -154,70 +162,77 @@ exports.text = function(filePath, contentType, cb) {
 		createParser,
 
 		function(parser, cb) {
+			fillMetadata(parser, contentType, filePath, function(err, metadata) {
+				cb(err, parser, metadata);
+			});
+		},
+
+		function(parser, metadata, cb) {
+			createInputStream(filePath, function(err, inputStream) {
+				cb(err, parser, metadata, inputStream);
+			});
+		},
+
+		function(parser, metadata, inputStream, cb) {
+			extractText(parser, metadata, inputStream, function(err, text) {
+				cb(err, inputStream, text);
+			});
+		}
+	], function(err, inputStream, text) {
+		if (inputStream) {
+			inputStream.close();
+		}
+
+		cb(err, text);
+	});
+};
+
+function extractText(parser, metadata, inputStream, cb) {
+	async.waterfall([
+		function(cb) {
 			java.newInstance('java.io.ByteArrayOutputStream', function(err, outputStream) {
-				cb(err, parser, outputStream);
+				cb(err, outputStream);
 			});
 		},
 
-		function(parser, outputStream, cb) {
+		function(outputStream, cb) {
 			java.newInstance('java.io.OutputStreamWriter', outputStream, function(err, writer) {
-				cb(err, parser, outputStream, writer);
+				cb(err, outputStream, writer);
 			});
 		},
 
-		function(parser, outputStream, writer, cb) {
+		function(outputStream, writer, cb) {
 			java.newInstance('cg.m.nodetika.WriteOutHelper', writer, function(err, writerHelper) {
-				cb(err, parser, outputStream, writerHelper);
+				cb(err, outputStream, writerHelper);
 			});
 		},
 
-		function(parser, outputStream, writerHelper, cb) {
+		function(outputStream, writerHelper, cb) {
 			java.newInstance('org.apache.tika.sax.BodyContentHandler', writerHelper, function(err, body) {
 				cb(err, parser, outputStream, body);
 			});
 		},
 
 		function(parser, outputStream, body, cb) {
-			createInputStream(filePath, function(err, inputStream) {
-				cb(err, parser, outputStream, body, inputStream);
-			});
-		},
-
-		function(parser, outputStream, body, inputStream, cb) {
-			java.newInstance('org.apache.tika.metadata.Metadata', function(err, metadata) {
-				if (err) {
-					return cb(err);
-				}
-
-				fillMetadata(parser, metadata, contentType, path.basename(filePath), function(err) {
-					cb(err, parser, outputStream, body, inputStream, metadata);
-				});
-			});
-		},
-
-		function(parser, outputStream, body, inputStream, metadata, cb) {
 			inputStream.getFile(function(err) {
-				cb(err, parser, outputStream, body, inputStream, metadata);
+				cb(err, parser, outputStream, body);
 			});
 		},
 
-		function(parser, outputStream, body, inputStream, metadata, cb) {
+		function(parser, outputStream, body, cb) {
 			parser.parse(inputStream, body, metadata, function(err) {
-				cb(err, outputStream, inputStream);
+				cb(err, outputStream);
 			});
 		}
-	], function(err, outputStream, inputStream) {
-		if (inputStream) {
-			inputStream.close();
-		}
-
+	], function(err, outputStream) {
 		if (err) {
 			return cb(err);
 		}
 
 		outputStream.toString('UTF-8', cb);
 	});
-};
+
+}
 
 exports.meta = function(filePath, contentType, cb) {
 	if (arguments.length < 3) {
@@ -229,13 +244,7 @@ exports.meta = function(filePath, contentType, cb) {
 		createParser,
 
 		function(parser, cb) {
-			java.newInstance('org.apache.tika.metadata.Metadata', function(err, metadata) {
-				cb(err, parser, metadata);
-			});
-		},
-
-		function(parser, metadata, cb) {
-			fillMetadata(parser, metadata, contentType, path.basename(filePath), function(err) {
+			fillMetadata(parser, contentType, path.basename(filePath), function(err, metadata) {
 				cb(err, parser, metadata);
 			});
 		},
