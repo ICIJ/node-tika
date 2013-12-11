@@ -10,6 +10,7 @@ suite('document tests', function() {
 	test('detect txt content-type', function(done) {
 		tika.contentType('test/data/file.txt', function(err, contentType) {
 			assert.ifError(err);
+			assert.equal(typeof contentType, 'string');
 			assert.equal(contentType, 'text/plain');
 			done();
 		});
@@ -18,6 +19,7 @@ suite('document tests', function() {
 	test('detect txt content-type and charset', function(done) {
 		tika.contentType('test/data/file.txt', true, function(err, contentType) {
 			assert.ifError(err);
+			assert.equal(typeof contentType, 'string');
 			assert.equal(contentType, 'text/plain; charset=ISO-8859-1');
 			done();
 		});
@@ -26,6 +28,7 @@ suite('document tests', function() {
 	test('extract from txt', function(done) {
 		tika.text('test/data/file.txt', function(err, text) {
 			assert.ifError(err);
+			assert.equal(typeof text, 'string');
 			assert.equal(text, 'Just some text.\n\n');
 			done();
 		});
@@ -35,6 +38,7 @@ suite('document tests', function() {
 		tika.meta('test/data/file.txt', function(err, meta) {
 			assert.ifError(err);
 			assert.ok(meta);
+			assert.equal(typeof meta.resourceName[0], 'string');
 			assert.deepEqual(meta.resourceName, ['file.txt']);
 			assert.deepEqual(meta['Content-Type'], ['text/plain; charset=ISO-8859-1']);
 			assert.deepEqual(meta['Content-Encoding'], ['ISO-8859-1']);
@@ -271,6 +275,7 @@ suite('non-utf8 encoded document tests', function() {
 	test('detect Windows Latin 1 text charset', function(done) {
 		tika.charset('test/data/nonutf8/windows-latin1.txt', function(err, charset) {
 			assert.ifError(err);
+			assert.equal(typeof charset, 'string');
 			assert.equal(charset, 'ISO-8859-1');
 			done();
 		});
@@ -390,6 +395,18 @@ suite('error handling tests', function() {
 		tika.text('test/data/encrypted/file.pdf', function(err, text) {
 			assert.ok(err);
 			assert.ok(-1 !== err.toString().indexOf('WrappedIOException: Error decrypting document'));
+			done();
+		});
+	});
+});
+
+suite('language detection tests', function() {
+	test('detect English text', function(done) {
+		tika.language('This just some text in English.', function(err, language, reasonablyCertain) {
+			assert.ifError(err);
+			assert.equal(typeof language, 'string');
+			assert.equal(typeof reasonablyCertain, 'boolean');
+			assert.equal(language, 'en');
 			done();
 		});
 	});

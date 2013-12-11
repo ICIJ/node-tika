@@ -389,3 +389,23 @@ exports.charset = function(filePath, cb) {
 		cb(err, charset);
 	});
 };
+
+exports.language = function(string, cb) {
+	async.waterfall([
+		function(cb) {
+			java.newInstance('org.apache.tika.language.LanguageIdentifier', java.newInstanceSync('java.lang.String', string), cb);
+		},
+
+		function(identifier, cb) {
+			identifier.getLanguage(function(err, language) {
+				cb(err, identifier, language);
+			});
+		},
+
+		function(identifier, language, cb) {
+			identifier.isReasonablyCertain(function(err, reasonablyCertain) {
+				cb(err, language, reasonablyCertain);
+			});
+		}
+	], cb);
+};
