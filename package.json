@@ -1,6 +1,6 @@
 {
 	"name": "tika",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "Apache Tika bridge.",
 	"homepage": "https://github.com/mattcg/tika",
 	"main": "./tika",
