@@ -260,7 +260,15 @@ suite('non-utf8 encoded document tests', function() {
 		});
 	});
 
-	test('Windows Latin 1 text content-type and charset', function(done) {
+	test('detect Windows Latin 1 text charset', function(done) {
+		tika.charset('test/data/nonutf8/windows-latin1.txt', function(err, charset) {
+			assert.ifError(err);
+			assert.equal(charset, 'ISO-8859-1');
+			done();
+		});
+	});
+
+	test('detect Windows Latin 1 text content-type and charset', function(done) {
 		tika.contentType('test/data/nonutf8/windows-latin1.txt', true, function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'text/plain; charset=ISO-8859-1');
@@ -276,7 +284,15 @@ suite('non-utf8 encoded document tests', function() {
 		});
 	});
 
-	test('UTF-16 English-language text content-type and charset', function(done) {
+	test('detect UTF-16 English-language text charset', function(done) {
+		tika.charset('test/data/nonutf8/utf16-english.txt', function(err, charset) {
+			assert.ifError(err);
+			assert.equal(charset, 'UTF-16LE');
+			done();
+		});
+	});
+
+	test('detect UTF-16 English-language text content-type and charset', function(done) {
 		tika.contentType('test/data/nonutf8/utf16-english.txt', true, function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'text/plain; charset=UTF-16LE');
@@ -292,7 +308,15 @@ suite('non-utf8 encoded document tests', function() {
 		});
 	});
 
-	test('UTF-16 Chinese (Simplified) text content-type and charset', function(done) {
+	test('detect UTF-16 Chinese (Simplified) text charset', function(done) {
+		tika.charset('test/data/nonutf8/utf16-chinese.txt', function(err, charset) {
+			assert.ifError(err);
+			assert.equal(charset, 'UTF-16LE');
+			done();
+		});
+	});
+
+	test('detect UTF-16 Chinese (Simplified) text content-type and charset', function(done) {
 		tika.contentType('test/data/nonutf8/utf16-chinese.txt', true, function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'text/plain; charset=UTF-16LE');

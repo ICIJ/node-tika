@@ -367,3 +367,25 @@ exports.contentType = function(filePath, withCharset, cb) {
 		return cb(err, contentType);
 	});
 };
+
+exports.charset = function(filePath, cb) {
+	async.waterfall([
+		function(cb) {
+			createInputStream(filePath, function(err, inputStream) {
+				cb(err, inputStream);
+			});
+		},
+
+		function(inputStream, cb) {
+			detectCharset(inputStream, function(err, charset) {
+				cb(err, inputStream, charset);
+			});
+		}
+	], function(err, inputStream, charset) {
+		if (inputStream) {
+			inputStream.close();
+		}
+
+		cb(err, charset);
+	});
+};
