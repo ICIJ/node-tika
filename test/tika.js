@@ -327,6 +327,24 @@ suite('archive tests', function() {
 	});
 });
 
+suite('encrypted doc tests', function() {
+	test('detect encrypted pdf content-type', function(done) {
+		tika.contentType('test/data/encrypted/file.pdf', function(err, contentType) {
+			assert.ifError(err);
+			assert.equal(contentType, 'application/pdf');
+			done();
+		});
+	});
+
+	test('detect encrypted doc content-type', function(done) {
+		tika.contentType('test/data/encrypted/file.doc', function(err, contentType) {
+			assert.ifError(err);
+			assert.equal(contentType, 'application/msword');
+			done();
+		});
+	});
+});
+
 suite('error handling tests', function() {
 	test('extract from encrypted doc', function(done) {
 		tika.text('test/data/encrypted/file.doc', function(err, text) {
