@@ -25,6 +25,7 @@ import org.apache.tika.parser.html.HtmlParser;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.detect.AutoDetectReader;
+import org.apache.tika.language.LanguageIdentifier;
 import org.apache.tika.sax.BodyContentHandler;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.exception.TikaException;
@@ -163,5 +164,15 @@ public class NodeTika {
 		}
 
 		return contentType;
+	}
+
+	public static String detectLanguage(String text) {
+		LanguageIdentifier identifier = new LanguageIdentifier(text);
+		Map language = new HashMap();
+
+		language.put("language", identifier.getLanguage());
+		language.put("reasonablyCertain", identifier.isReasonablyCertain());
+
+		return new Gson().toJson(language);
 	}
 }

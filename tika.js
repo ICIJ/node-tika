@@ -4,7 +4,6 @@
 
 var java = require('java');
 var path = require('path');
-var async = require('async');
 
 java.classpath.push(__dirname + '/jar/node-tika-1.5-SNAPSHOT.jar');
 java.options.push('-Djava.awt.headless=true');
@@ -72,22 +71,13 @@ exports.charset = function(filePath, cb) {
 	NodeTika.detectCharset(filePath, cb);
 };
 
-exports.language = function(string, cb) {
-	async.waterfall([
-		function(cb) {
-			java.newInstance('org.apache.tika.language.LanguageIdentifier', string, cb);
-		},
-
-		function(identifier, cb) {
-			identifier.getLanguage(function(err, language) {
-				cb(err, identifier, language);
-			});
-		},
-
-		function(identifier, language, cb) {
-			identifier.isReasonablyCertain(function(err, reasonablyCertain) {
-				cb(err, language, reasonablyCertain);
-			});
+exports.language = function(text, cb) {
+	NodeTika.detectLanguage(text, function(err, language) {
+		if (err) {
+			cb(err);
+		} else {
+			language = JSON.parse(language);
+			cb(null, language.language, language.reasonablyCertain);
 		}
-	], cb);
+	});
 };
