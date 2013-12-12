@@ -75,7 +75,7 @@ exports.charset = function(filePath, cb) {
 exports.language = function(string, cb) {
 	async.waterfall([
 		function(cb) {
-			java.newInstance('org.apache.tika.language.LanguageIdentifier', java.newInstanceSync('java.lang.String', string), cb);
+			java.newInstance('org.apache.tika.language.LanguageIdentifier', string, cb);
 		},
 
 		function(identifier, cb) {
