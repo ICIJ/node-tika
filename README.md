@@ -21,7 +21,7 @@ Extract both text and metadata from a file. Content type is optional but would h
 ```javascript
 tika.extract('test/data/file.pdf', function(err, text, meta) {
 	assert.equal(text.trim(), 'Just some text.');
-	assert.deepEqual(meta.producer, ['LibreOffice 4.1']);
+	assert.deepEqual(meta.producer, 'LibreOffice 4.1');
 });
 ```
 
@@ -41,7 +41,7 @@ Extract metadata from a file. Returns an object with names as keys.
 
 ```javascript
 tika.meta('test/data/file.pdf', function(err, meta) {
-	assert.deepEqual(meta.producer, ['LibreOffice 4.1']);
+	assert.deepEqual(meta.producer, 'LibreOffice 4.1');
 });
 ```
 
