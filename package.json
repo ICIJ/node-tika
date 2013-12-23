@@ -1,7 +1,15 @@
 {
 	"name": "tika",
 	"version": "0.1.0",
-	"description": "Apache Tika bridge.",
+	"description": "Apache Tika bridge. Text extraction, metadata extraction, mimetype detection and language detection.",
+	"keywords": [
+		"docx",
+		"pdf",
+		"doc",
+		"xlsx",
+		"content analysis",
+		"office"
+	],
 	"homepage": "https://github.com/mattcg/node-tika",
 	"main": "./tika",
 	"contributors": [
