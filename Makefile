@@ -1,8 +1,8 @@
 .DELETE_ON_ERROR:
 
 JAVAS := $(shell ls src/main/java/cg/m/nodetika/*.java)
-JAR := jar/node-tika-1.5-SNAPSHOT.jar
-PARSERS_JAR := build/tika/tika-core/target/tika-parsers-1.5-SNAPSHOT.jar
+JAR := jar/node-tika-1.5.jar
+PARSERS_JAR := build/tika/tika-core/target/tika-parsers-1.5.jar
 
 install: node_modules
 
@@ -18,9 +18,9 @@ $(PARSERS_JAR): build/tika
 update-tika build/tika:
 	if [ ! -d build/tika ]; then \
 		git clone git://git.apache.org/tika.git build/tika; \
+		cd build/tika && git checkout tags/1.5; \
 	else \
-		cd build/tika && git pull; \
-		touch .; \
+		touch build/tika; \
 	fi
 
 build/java:

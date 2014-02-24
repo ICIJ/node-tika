@@ -5,7 +5,7 @@
 var java = require('java');
 var path = require('path');
 
-java.classpath.push(__dirname + '/jar/node-tika-1.5-SNAPSHOT.jar');
+java.classpath.push(__dirname + '/jar/node-tika-1.5.jar');
 java.options.push('-Djava.awt.headless=true');
 java.options.push('-Xrs');
 
