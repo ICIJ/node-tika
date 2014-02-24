@@ -32,10 +32,10 @@
 		}
 	],
 	"dependencies": {
-		"java": "~0.2.9"
+		"java": "~0.3.0"
 	},
 	"devDependencies": {
-		"mocha": "~1.15.1",
-		"istanbul": "~0.1.46"
+		"mocha": "~1.17.1",
+		"istanbul": "~0.2.4"
 	}
 }
