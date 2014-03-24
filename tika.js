@@ -13,8 +13,7 @@ var NodeTika = java.import('cg.m.nodetika.NodeTika');
 function extractMeta(filePath, contentType, cb) {
 	NodeTika.extractMeta(filePath, contentType, function(err, meta) {
 		if (err) {
-			cb(err);
-			return;
+			return cb(err);
 		}
 
 		cb(null, JSON.parse(meta));
@@ -29,8 +28,7 @@ exports.extract = function(filePath, contentType, cb) {
 
 	extractMeta(filePath, contentType, function(err, meta) {
 		if (err) {
-			cb(err);
-			return;
+			return cb(err);
 		}
 
 		NodeTika.extractText(filePath, contentType, function(err, text) {
