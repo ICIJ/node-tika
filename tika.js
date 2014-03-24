@@ -3,7 +3,6 @@
 'use strict';
 
 var java = require('java');
-var path = require('path');
 
 java.classpath.push(__dirname + '/jar/node-tika-1.5.jar');
 java.options.push('-Djava.awt.headless=true');
