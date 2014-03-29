@@ -33,7 +33,7 @@ node_modules: package.json
 	touch $@
 
 test: node_modules
-	./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --timeout 3000 --reporter spec --check-leaks --ui tdd --recursive
+	./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --timeout 30000 --reporter spec --check-leaks --ui tdd --recursive
 
 clean:
 	rm -rf coverage build node_modules
