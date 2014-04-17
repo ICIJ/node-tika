@@ -85,7 +85,7 @@ tika.language('This is just some text in English.', function(err, language, reas
 
 ## Credits and collaboration ##
 
-Developed by [Matthew Caruana Galizia](https://twitter.com/mcaruanagalizia). Requires plenty more development and maintenance. Please feel free to submit an issue or pull request.
+Developed by [Matthew Caruana Galizia](https://twitter.com/mcaruanagalizia). Please feel free to submit an issue or pull request.
 
 ## License ##
 
