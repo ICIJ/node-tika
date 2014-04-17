@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2013, Matthew Caruana Galizia. Licensed under an MIT-style license.
+ * You may obtain a copy of the License at
+ *
+ *		 http://mattcg.mit-license.org
+ */
+
 package cg.m.nodetika;
 
 import java.util.Map;

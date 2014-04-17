@@ -1,3 +1,10 @@
+/**
+ * @overview
+ * @author Matthew Caruana Galizia <m@m.cg>
+ * @license MIT
+ * @copyright Copyright (c) 2013, Matthew Caruana Galizia
+ */
+
 /*jshint node:true, es5: true*/
 
 'use strict';
