@@ -8,7 +8,7 @@ var tika = require('../');
 
 suite('document tests', function() {
 	test('detect txt content-type', function(done) {
-		tika.contentType('test/data/file.txt', function(err, contentType) {
+		tika.type('test/data/file.txt', function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(typeof contentType, 'string');
 			assert.equal(contentType, 'text/plain');
@@ -17,7 +17,7 @@ suite('document tests', function() {
 	});
 
 	test('detect txt content-type and charset', function(done) {
-		tika.contentType('test/data/file.txt', true, function(err, contentType) {
+		tika.type('test/data/file.txt', true, function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(typeof contentType, 'string');
 			assert.equal(contentType, 'text/plain; charset=ISO-8859-1');
@@ -142,7 +142,7 @@ suite('document tests', function() {
 	});
 
 	test('detect content-type of pdf', function(done) {
-		tika.contentType('test/data/file.pdf', function(err, contentType) {
+		tika.type('test/data/file.pdf', function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'application/pdf');
 			done();
@@ -296,7 +296,7 @@ suite('non-utf8 encoded document tests', function() {
 	});
 
 	test('detect Windows Latin 1 text content-type and charset', function(done) {
-		tika.contentType('test/data/nonutf8/windows-latin1.txt', true, function(err, contentType) {
+		tika.type('test/data/nonutf8/windows-latin1.txt', true, function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'text/plain; charset=ISO-8859-1');
 			done();
@@ -320,7 +320,7 @@ suite('non-utf8 encoded document tests', function() {
 	});
 
 	test('detect UTF-16 English-language text content-type and charset', function(done) {
-		tika.contentType('test/data/nonutf8/utf16-english.txt', true, function(err, contentType) {
+		tika.type('test/data/nonutf8/utf16-english.txt', true, function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'text/plain; charset=UTF-16LE');
 			done();
@@ -344,7 +344,7 @@ suite('non-utf8 encoded document tests', function() {
 	});
 
 	test('detect UTF-16 Chinese (Simplified) text content-type and charset', function(done) {
-		tika.contentType('test/data/nonutf8/utf16-chinese.txt', true, function(err, contentType) {
+		tika.type('test/data/nonutf8/utf16-chinese.txt', true, function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'text/plain; charset=UTF-16LE');
 			done();
@@ -362,7 +362,7 @@ suite('archive tests', function() {
 	});
 
 	test('detect compressed archive content-type', function(done) {
-		tika.contentType('test/data/archive/files.zip', function(err, contentType) {
+		tika.type('test/data/archive/files.zip', function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'application/zip');
 			done();
@@ -380,7 +380,7 @@ suite('archive tests', function() {
 
 suite('encrypted doc tests', function() {
 	test('detect encrypted pdf content-type', function(done) {
-		tika.contentType('test/data/encrypted/file.pdf', function(err, contentType) {
+		tika.type('test/data/encrypted/file.pdf', function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'application/pdf');
 			done();
@@ -388,7 +388,7 @@ suite('encrypted doc tests', function() {
 	});
 
 	test('detect encrypted doc content-type', function(done) {
-		tika.contentType('test/data/encrypted/file.doc', function(err, contentType) {
+		tika.type('test/data/encrypted/file.doc', function(err, contentType) {
 			assert.ifError(err);
 			assert.equal(contentType, 'application/msword');
 			done();

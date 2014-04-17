@@ -55,7 +55,7 @@ exports.meta = function(filePath, contentType, cb) {
 	extractMeta(filePath, contentType, cb);
 };
 
-exports.contentType = function(filePath, withCharset, cb) {
+exports.type = exports.contentType = function(filePath, withCharset, cb) {
 	if (arguments.length < 3) {
 		cb = withCharset;
 		withCharset = false;

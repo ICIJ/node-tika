@@ -45,12 +45,12 @@ tika.meta('test/data/file.pdf', function(err, meta) {
 });
 ```
 
-### tika.contentType(filePath, [withCharset,] cb) ###
+### tika.type(filePath, [withCharset,] cb) ###
 
 Detect the content-type of a file.
 
 ```javascript
-tika.contentType('test/data/file.pdf', function(err, contentType) {
+tika.type('test/data/file.pdf', function(err, contentType) {
 	assert.equal(contentType, 'application/pdf');
 });
 ```
@@ -58,7 +58,7 @@ tika.contentType('test/data/file.pdf', function(err, contentType) {
 The `withCharset` parameter defaults to `false`. If set to `true`, then the charset will be appended to the mime-type.
 
 ```javascript
-tika.contentType('test/data/file.txt', true, function(err, contentType) {
+tika.type('test/data/file.txt', true, function(err, contentType) {
 	assert.equal(contentType, 'text/plain; charset=ISO-8859-1');
 });
 ```
@@ -68,7 +68,7 @@ tika.contentType('test/data/file.txt', true, function(err, contentType) {
 Detect the character set (text encoding) of a file.
 
 ```javascript
-tika.contentType('test/data/file.txt', true, function(err, charset) {
+tika.charset('test/data/file.txt', true, function(err, charset) {
 	assert.equal(charset, 'ISO-8859-1');
 });
 ```
