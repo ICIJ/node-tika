@@ -104,12 +104,16 @@ public class NodeTika {
 	}
 
 	public static String extractText(String filePath, String contentType) throws Exception {
+		return extractText(filePath, contentType, "UTF8");
+	}
+
+	public static String extractText(String filePath, String contentType, String outputEncoding) throws Exception {
 		AutoDetectParser parser = createParser();
 		Metadata metadata = createMetadata(parser, contentType, filePath);
 		TikaInputStream inputStream = createInputStream(filePath);
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+		OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);
 		BodyContentHandler body = new BodyContentHandler(new RichTextContentHandler(writer));
 
 		try {
