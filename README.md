@@ -22,8 +22,16 @@ Extract both text and metadata from a file. Content type is optional but would h
 
 ```javascript
 tika.extract('test/data/file.pdf', function(err, text, meta) {
-	assert.equal(text.trim(), 'Just some text.');
-	assert.deepEqual(meta.producer, 'LibreOffice 4.1');
+	console.log(text); // Logs 'Just some text'.
+	console.log(meta.producer); // Logs 'LibreOffice 4.1'.
+});
+```
+
+We can even extract directly from the Web.
+
+```javascript
+tika.extract('http://www.ohchr.org/EN/UDHR/Documents/UDHR_Translations/eng.pdf', function(err, text, meta) {
+	// ...
 });
 ```
 
@@ -33,7 +41,7 @@ Extract text from a file.
 
 ```javascript
 tika.text('test/data/file.pdf', function(err, text) {
-	assert.equal(text.trim(), 'Just some text.');
+	console.log(text);
 });
 ```
 
@@ -43,7 +51,7 @@ Extract metadata from a file. Returns an object with names as keys.
 
 ```javascript
 tika.meta('test/data/file.pdf', function(err, meta) {
-	assert.deepEqual(meta.producer, 'LibreOffice 4.1');
+	console.log(meta.producer); // Logs 'LibreOffice 4.1'.
 });
 ```
 
@@ -53,7 +61,7 @@ Detect the content-type of a file.
 
 ```javascript
 tika.type('test/data/file.pdf', function(err, contentType) {
-	assert.equal(contentType, 'application/pdf');
+	console.log(contentType); // Logs 'application/pdf'.
 });
 ```
 
@@ -61,7 +69,7 @@ The `withCharset` parameter defaults to `false`. If set to `true`, then the char
 
 ```javascript
 tika.type('test/data/file.txt', true, function(err, contentType) {
-	assert.equal(contentType, 'text/plain; charset=ISO-8859-1');
+	console.log(contentType); // Logs 'text/plain; charset=ISO-8859-1'.
 });
 ```
 
@@ -71,7 +79,7 @@ Detect the character set (text encoding) of a file.
 
 ```javascript
 tika.charset('test/data/file.txt', true, function(err, charset) {
-	assert.equal(charset, 'ISO-8859-1');
+	console.log(charset); // Logs 'ISO-8859-1'.
 });
 ```
 
@@ -81,7 +89,8 @@ Detect the language a given string is written in.
 
 ```javascript
 tika.language('This is just some text in English.', function(err, language, reasonablyCertain) {
-	assert.equal(language, 'en');
+	console.log(language); // Logs 'en'.
+	console.log(reasonablyCertain); // Logs true or false.
 });
 ```
 
