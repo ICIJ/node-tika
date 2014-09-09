@@ -17,8 +17,8 @@ java.options.push('-Xrs');
 
 var NodeTika = java.import('cg.m.nodetika.NodeTika');
 
-function extractMeta(filePath, contentType, cb) {
-	NodeTika.extractMeta(filePath, contentType, function(err, meta) {
+function extractMeta(uri, contentType, cb) {
+	NodeTika.extractMeta(uri, contentType, function(err, meta) {
 		if (err) {
 			return cb(err);
 		}
@@ -27,52 +27,52 @@ function extractMeta(filePath, contentType, cb) {
 	});
 }
 
-exports.extract = function(filePath, contentType, cb) {
+exports.extract = function(uri, contentType, cb) {
 	if (arguments.length < 3) {
 		cb = contentType;
 		contentType = null;
 	}
 
-	extractMeta(filePath, contentType, function(err, meta) {
+	extractMeta(uri, contentType, function(err, meta) {
 		if (err) {
 			return cb(err);
 		}
 
-		NodeTika.extractText(filePath, contentType, function(err, text) {
+		NodeTika.extractText(uri, contentType, function(err, text) {
 			cb(err, text, meta);
 		});
 	});
 };
 
-exports.text = function(filePath, contentType, cb) {
+exports.text = function(uri, contentType, cb) {
 	if (arguments.length < 3) {
 		cb = contentType;
 		contentType = null;
 	}
 
-	NodeTika.extractText(filePath, contentType, cb);
+	NodeTika.extractText(uri, contentType, cb);
 };
 
-exports.meta = function(filePath, contentType, cb) {
+exports.meta = function(uri, contentType, cb) {
 	if (arguments.length < 3) {
 		cb = contentType;
 		contentType = null;
 	}
 
-	extractMeta(filePath, contentType, cb);
+	extractMeta(uri, contentType, cb);
 };
 
-exports.type = exports.contentType = function(filePath, withCharset, cb) {
+exports.type = exports.contentType = function(uri, withCharset, cb) {
 	if (arguments.length < 3) {
 		cb = withCharset;
 		withCharset = false;
 	}
 
-	NodeTika.detectContentType(filePath, withCharset, cb);
+	NodeTika.detectContentType(uri, withCharset, cb);
 };
 
-exports.charset = function(filePath, cb) {
-	NodeTika.detectCharset(filePath, cb);
+exports.charset = function(uri, cb) {
+	NodeTika.detectCharset(uri, cb);
 };
 
 exports.language = function(text, cb) {

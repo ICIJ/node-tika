@@ -14,7 +14,9 @@ Requires JDK 7. Run `node version` to check the version that `node-java` is usin
 var tika = require('tika');
 ```
 
-### tika.extract(filePath, [contentType,] cb) ###
+All methods that accept a `uri` parameter accept relative or absolute file paths and `http:` or `https:` URLs.
+
+### tika.extract(uri, [contentType,] cb) ###
 
 Extract both text and metadata from a file. Content type is optional but would help Tika in some cases.
 
@@ -25,7 +27,7 @@ tika.extract('test/data/file.pdf', function(err, text, meta) {
 });
 ```
 
-### tika.text(filePath, [contentType,] cb) ###
+### tika.text(uri, [contentType,] cb) ###
 
 Extract text from a file.
 
@@ -35,7 +37,7 @@ tika.text('test/data/file.pdf', function(err, text) {
 });
 ```
 
-### tika.meta(filePath, [contentType,] cb) ###
+### tika.meta(uri, [contentType,] cb) ###
 
 Extract metadata from a file. Returns an object with names as keys.
 
@@ -45,7 +47,7 @@ tika.meta('test/data/file.pdf', function(err, meta) {
 });
 ```
 
-### tika.type(filePath, [withCharset,] cb) ###
+### tika.type(uri, [withCharset,] cb) ###
 
 Detect the content-type of a file.
 
@@ -63,7 +65,7 @@ tika.type('test/data/file.txt', true, function(err, contentType) {
 });
 ```
 
-### tika.charset(filePath, cb) ###
+### tika.charset(uri, cb) ###
 
 Detect the character set (text encoding) of a file.
 

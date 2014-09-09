@@ -414,6 +414,16 @@ suite('error handling tests', function() {
 	});
 });
 
+suite('http extraction tests', function() {
+	test('extract from pdf over http', function(done) {
+		tika.text('http://www.ohchr.org/EN/UDHR/Documents/UDHR_Translations/eng.pdf', function(err, text) {
+			assert.ifError(err);
+			assert.ok(-1 !== text.indexOf('Universal Declaration of Human Rights'));
+			done();
+		});
+	});
+});
+
 suite('language detection tests', function() {
 	test('detect English text', function(done) {
 		tika.language('This just some text in English.', function(err, language, reasonablyCertain) {

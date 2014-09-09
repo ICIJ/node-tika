@@ -19,6 +19,9 @@ import java.io.FileInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 
+import java.net.URL;
+import java.net.MalformedURLException;
+
 import java.lang.Exception;
 
 import org.apache.tika.io.TikaInputStream;
@@ -46,8 +49,16 @@ import com.google.gson.Gson;
 
 public class NodeTika {
 
-	private static TikaInputStream createInputStream(String filePath) throws FileNotFoundException {
-		return TikaInputStream.get(new FileInputStream(filePath));
+	private static TikaInputStream createInputStream(String uri) throws FileNotFoundException, MalformedURLException, IOException {
+		InputStream inputStream;
+
+		if (uri.startsWith("http://") || uri.startsWith("https://")) {
+			inputStream = new URL(uri).openStream();
+		} else {
+			inputStream = new FileInputStream(uri);
+		}
+
+		return TikaInputStream.get(inputStream);
 	}
 
 	private static AutoDetectParser createParser() {
@@ -70,9 +81,9 @@ public class NodeTika {
 		return parser;
 	}
 
-	private static Metadata createMetadata(AutoDetectParser parser, String contentType, String filePath) {
+	private static Metadata createMetadata(AutoDetectParser parser, String contentType, String uri) {
 		Metadata metadata = new Metadata();
-		metadata.set(TikaMetadataKeys.RESOURCE_NAME_KEY, new File(filePath).getName());
+		metadata.set(TikaMetadataKeys.RESOURCE_NAME_KEY, new File(uri).getName());
 
 		if (contentType != null && "xml".equals(MediaType.parse(contentType).getSubtype())) {
 			contentType = null;
@@ -103,14 +114,14 @@ public class NodeTika {
 		return metadata;
 	}
 
-	public static String extractText(String filePath, String contentType) throws Exception {
-		return extractText(filePath, contentType, "UTF8");
+	public static String extractText(String uri, String contentType) throws Exception {
+		return extractText(uri, contentType, "UTF8");
 	}
 
-	public static String extractText(String filePath, String contentType, String outputEncoding) throws Exception {
+	public static String extractText(String uri, String contentType, String outputEncoding) throws Exception {
 		AutoDetectParser parser = createParser();
-		Metadata metadata = createMetadata(parser, contentType, filePath);
-		TikaInputStream inputStream = createInputStream(filePath);
+		Metadata metadata = createMetadata(parser, contentType, uri);
+		TikaInputStream inputStream = createInputStream(uri);
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);
@@ -131,10 +142,10 @@ public class NodeTika {
 		return outputStream.toString("UTF-8");
 	}
 
-	public static String extractMeta(String filePath, String contentType) throws Exception {
+	public static String extractMeta(String uri, String contentType) throws Exception {
 		AutoDetectParser parser = createParser();
-		Metadata metadata = createMetadata(parser, contentType, filePath);
-		TikaInputStream inputStream = createInputStream(filePath);
+		Metadata metadata = createMetadata(parser, contentType, uri);
+		TikaInputStream inputStream = createInputStream(uri);
 
 		parser.parse(inputStream, new DefaultHandler(), metadata);
 
@@ -148,8 +159,8 @@ public class NodeTika {
 		return new Gson().toJson(meta);
 	}
 
-	public static String detectCharset(String filePath) throws FileNotFoundException, IOException, TikaException {
-		TikaInputStream inputStream = createInputStream(filePath);
+	public static String detectCharset(String uri) throws FileNotFoundException, IOException, TikaException {
+		TikaInputStream inputStream = createInputStream(uri);
 		AutoDetectReader reader = new AutoDetectReader(inputStream);
 		String charset = reader.getCharset().toString();
 
@@ -157,18 +168,18 @@ public class NodeTika {
 		return charset;
 	}
 
-	public static String detectContentType(String filePath, boolean withCharset) throws TikaException, FileNotFoundException, IOException {
+	public static String detectContentType(String uri, boolean withCharset) throws TikaException, FileNotFoundException, IOException {
 		Detector detector = new TikaConfig().getDetector();
-		TikaInputStream inputStream = createInputStream(filePath);
+		TikaInputStream inputStream = createInputStream(uri);
 		Metadata metadata = new Metadata();
 
-		metadata.add(TikaMetadataKeys.RESOURCE_NAME_KEY, filePath);
+		metadata.add(TikaMetadataKeys.RESOURCE_NAME_KEY, uri);
 		String contentType = detector.detect(inputStream, metadata).toString();
 
 		inputStream.close();
 
 		if (withCharset == true && contentType != null && !contentType.isEmpty()) {
-			String charset = detectCharset(filePath);
+			String charset = detectCharset(uri);
 			if (charset != null && !charset.isEmpty()) {
 				return contentType + "; charset=" + charset;
 			}
