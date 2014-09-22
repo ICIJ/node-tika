@@ -52,7 +52,7 @@ public class NodeTika {
 	private static TikaInputStream createInputStream(String uri) throws FileNotFoundException, MalformedURLException, IOException {
 		InputStream inputStream;
 
-		if (uri.startsWith("http://") || uri.startsWith("https://")) {
+		if (uri.startsWith("http://") || uri.startsWith("https://") || uri.startsWith("ftp://")) {
 			inputStream = new URL(uri).openStream();
 		} else {
 			inputStream = new FileInputStream(uri);

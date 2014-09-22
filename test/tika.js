@@ -424,6 +424,16 @@ suite('http extraction tests', function() {
 	});
 });
 
+suite('ftp extraction tests', function() {
+	test('extract from text file over ftp', function(done) {
+		tika.text('ftp://ftp.ed.ac.uk/INSTRUCTIONS-FOR-USING-THIS-SERVICE', function(err, text) {
+			assert.ifError(err);
+			assert.ok(-1 !== text.indexOf('This service is managed by Information Services'));
+			done();
+		});
+	});
+});
+
 suite('language detection tests', function() {
 	test('detect English text', function(done) {
 		tika.language('This just some text in English.', function(err, language, reasonablyCertain) {
