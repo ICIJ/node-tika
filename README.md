@@ -14,7 +14,7 @@ Requires JDK 7. Run `node version` to check the version that `node-java` is usin
 var tika = require('tika');
 ```
 
-All methods that accept a `uri` parameter accept relative or absolute file paths and `http:` or `https:` URLs.
+All methods that accept a `uri` parameter accept relative or absolute file paths and `http:`, `https:` or `ftp:` URLs.
 
 ### tika.extract(uri, [contentType,] cb) ###
 
