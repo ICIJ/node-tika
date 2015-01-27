@@ -408,7 +408,7 @@ suite('error handling tests', function() {
 	test('extract from encrypted pdf', function(done) {
 		tika.text('test/data/encrypted/file.pdf', function(err, text) {
 			assert.ok(err);
-			assert.ok(-1 !== err.toString().indexOf('WrappedIOException: Error decrypting document'));
+			assert.ok(-1 !== err.toString().indexOf('TikaException: Unable to extract PDF content'));
 			done();
 		});
 	});
