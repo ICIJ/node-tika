@@ -1,30 +1,31 @@
 .DELETE_ON_ERROR:
 
+TIKA_VERSION := 1.7
 JAVAS := $(shell ls src/main/java/cg/m/nodetika/*.java)
-JAR := jar/node-tika-1.6.jar
-PARSERS_JAR := build/tika/tika-core/target/tika-parsers-1.6.jar
+JAR := jar/node-tika-$(TIKA_VERSION).jar
+PARSERS_JAR := build/tika/tika-core/target/tika-parsers-$(TIKA_VERSION).jar
 
 install: node_modules
 
-update: build/tika-1.6 $(JAR)
+update: build/tika-$(TIKA_VERSION) $(JAR)
 
-$(JAR): $(JAVAS) build/tika-1.6
+$(JAR): $(JAVAS) build/tika-$(TIKA_VERSION)
 	mvn install
 
-$(PARSERS_JAR): build/tika-1.6
+$(PARSERS_JAR): build/tika-$(TIKA_VERSION)
 	 cd $< && mvn clean && mvn install -Dmaven.test.skip=true
 	 touch $<
 
-build/tika-1.6-src.zip: build
+build/tika-$(TIKA_VERSION)-src.zip: build
 	if [ ! -f $@ ]; then \
-		curl http://www.eu.apache.org/dist/tika/tika-1.6-src.zip --output build/tika-1.6-src.zip; \
+		curl http://www.eu.apache.org/dist/tika/tika-$(TIKA_VERSION)-src.zip --output build/tika-$(TIKA_VERSION)-src.zip; \
 	else \
 		touch $@; \
 	fi
 
-build/tika-1.6: build/tika-1.6-src.zip
+build/tika-$(TIKA_VERSION): build/tika-$(TIKA_VERSION)-src.zip
 	if [ ! -d $@ ]; then \
-		unzip build/tika-1.6-src.zip -d build; \
+		unzip build/tika-$(TIKA_VERSION)-src.zip -d build; \
 	else \
 		touch $@; \
 	fi
@@ -42,6 +43,6 @@ test: node_modules
 	./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --timeout 30000 --reporter spec --check-leaks --ui tdd --recursive
 
 clean:
-	rm -rf coverage build node_modules
+	rm -rf build
 
 .PHONY: install update test clean
