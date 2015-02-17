@@ -115,7 +115,7 @@ public class NodeTika {
 	}
 
 	public static String extractText(String uri, String contentType) throws Exception {
-		return extractText(uri, contentType, "UTF8");
+		return extractText(uri, contentType, "UTF-8");
 	}
 
 	public static String extractText(String uri, String contentType, String outputEncoding) throws Exception {
