@@ -12,7 +12,7 @@
 	],
 	"homepage": "https://github.com/mattcg/node-tika",
 	"main": "./tika",
-	"author": "Matthew Caruana Galizia <m@m.cg>"
+	"author": "Matthew Caruana Galizia <m@m.cg>",
 	"contributors": [
 		{
 			"name": "Matthias Götzke",
