@@ -43,6 +43,7 @@ All methods that accept a `uri` parameter accept relative or absolute file paths
 The available options are the following.
 
  - `contentType` to provide a hint to Tika on which parser to use.
+ - `outputEncoding` to specify the text output encoding. Defaults to "UTF-8".
 
 ### tika.extract(uri, [options,] cb) ###
 

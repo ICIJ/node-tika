@@ -150,18 +150,32 @@ public class NodeTika {
 		}
 	}
 
-	public static String extractText(String uri) throws Exception {
-		return extractText(uri, null);
+	public static String extractText(String uri, String optionsJson) throws Exception {
+		Map options = null;
+
+		if (optionsJson != null) {
+			options = new Gson().fromJson(optionsJson, HashMap.class);
+		}
+
+		return extractText(uri, options);
 	}
 
-	public static String extractText(String uri, String contentType) throws Exception {
-		return extractText(uri, contentType, "UTF-8");
-	}
-
-	public static String extractText(String uri, String contentType, String outputEncoding) throws Exception {
+	public static String extractText(String uri, Map options) throws Exception {
 		final AutoDetectParser parser = createParser();
 		final Metadata metadata = new Metadata();
 		final ParseContext context = new ParseContext();
+
+		String outputEncoding = null;
+		String contentType = null;
+
+		if (options != null) {
+			outputEncoding = options.get("outputEncoding").toString();
+			contentType = options.get("contentType").toString();
+		}
+
+		if (outputEncoding == null) {
+			outputEncoding = "UTF-8";
+		}
 
 		fillMetadata(parser, metadata, contentType, uri);
 
@@ -186,18 +200,32 @@ public class NodeTika {
 		return outputStream.toString(outputEncoding);
 	}
 
-	public static String extractXml(String uri, String outputFormat) throws Exception {
-		return extractXml(uri, outputFormat, null);
+	public static String extractXml(String uri, String outputFormat, String optionsJson) throws Exception {
+		Map options = null;
+
+		if (optionsJson != null) {
+			options = new Gson().fromJson(optionsJson, HashMap.class);
+		}
+
+		return extractXml(uri, outputFormat, options);
 	}
 
-	public static String extractXml(String uri, String outputFormat, String contentType) throws Exception {
-		return extractXml(uri, outputFormat, contentType, "UTF-8");
-	}
-
-	public static String extractXml(String uri, String outputFormat, String contentType, String outputEncoding) throws Exception {
+	public static String extractXml(String uri, String outputFormat, Map options) throws Exception {
 		final AutoDetectParser parser = createParser();
 		final Metadata metadata = new Metadata();
 		final ParseContext context = new ParseContext();
+
+		String outputEncoding = null;
+		String contentType = null;
+
+		if (options != null) {
+			outputEncoding = options.get("outputEncoding").toString();
+			contentType = options.get("contentType").toString();
+		}
+
+		if (outputEncoding == null) {
+			outputEncoding = "UTF-8";
+		}
 
 		fillMetadata(parser, metadata, contentType, uri);
 

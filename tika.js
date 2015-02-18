@@ -40,11 +40,7 @@ exports.text = function(uri, options, cb) {
 		options = null;
 	}
 
-	if (options) {
-		NodeTika.extractText(uri, options.contentType, cb);
-	} else {
-		NodeTika.extractText(uri, cb);
-	}
+	NodeTika.extractText(uri, JSON.stringify(options), cb);
 };
 
 exports.xhtml = function(uri, options, cb) {
@@ -53,11 +49,7 @@ exports.xhtml = function(uri, options, cb) {
 		options = null;
 	}
 
-	if (options) {
-		NodeTika.extractXml(uri, 'html', options.contentType, cb);
-	} else {
-		NodeTika.extractXml(uri, 'html', cb);
-	}
+	NodeTika.extractXml(uri, 'html', JSON.stringify(options), cb);
 };
 
 exports.meta = function(uri, options, cb) {
