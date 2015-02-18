@@ -11,6 +11,8 @@ Requires JDK 7. Run `node version` to check the version that `node-java` is usin
 ## Extracting text ##
 
 ```javascript
+var tika = require('tika');
+
 var options = {
 
 	// Hint the content-type. This is optional but would help Tika choose a parser in some cases.
@@ -25,7 +27,17 @@ tika.text('test/data/file.pdf', options, function(err, text) {
 We can even extract directly from the Web.
 
 ```javascript
-tika.extract('http://www.ohchr.org/EN/UDHR/Documents/UDHR_Translations/eng.pdf', function(err, text, meta) {
+tika.text('http://www.ohchr.org/EN/UDHR/Documents/UDHR_Translations/eng.pdf', function(err, text, meta) {
+	// ...
+});
+```
+
+Or extract text using OCR (requires Tesseract).
+
+```javascript
+tika.text('test/data/ocr/simple.jpg', {
+	ocrLanguage: 'eng'
+}, function(err, text) {
 	// ...
 });
 ```
@@ -33,10 +45,6 @@ tika.extract('http://www.ohchr.org/EN/UDHR/Documents/UDHR_Translations/eng.pdf',
 If the server returns a content-type header, it will be passed to Tika as a hint.
 
 ## API ##
-
-```javascript
-var tika = require('tika');
-```
 
 All methods that accept a `uri` parameter accept relative or absolute file paths and `http:`, `https:` or `ftp:` URLs.
 
