@@ -5,7 +5,7 @@
  * @copyright Copyright (c) 2013, Matthew Caruana Galizia
  */
 
-/*jshint node:true, es5: true*/
+/*jshint node:true*/
 
 'use strict';
 
