@@ -17,62 +17,76 @@ java.options.push('-Xrs');
 
 var NodeTika = java.import('cg.m.nodetika.NodeTika');
 
-function extractMeta(uri, contentType, cb) {
-	NodeTika.extractMeta(uri, contentType, function(err, meta) {
-		if (err) {
-			return cb(err);
-		}
-
-		cb(null, JSON.parse(meta));
-	});
-}
-
-exports.extract = function(uri, contentType, cb) {
+exports.extract = function(uri, options, cb) {
 	if (arguments.length < 3) {
-		cb = contentType;
-		contentType = null;
+		cb = options;
+		options = null;
 	}
 
-	extractMeta(uri, contentType, function(err, meta) {
+	exports.text(uri, options, function(err, text) {
 		if (err) {
 			return cb(err);
 		}
 
-		NodeTika.extractText(uri, contentType, function(err, text) {
+		exports.meta(uri, options, function(err, meta) {
 			cb(err, text, meta);
 		});
 	});
 };
 
-exports.text = function(uri, contentType, cb) {
+exports.text = function(uri, options, cb) {
 	if (arguments.length < 3) {
-		cb = contentType;
-		contentType = null;
+		cb = options;
+		options = null;
 	}
 
-	NodeTika.extractText(uri, contentType, cb);
+	if (options) {
+		NodeTika.extractText(uri, options.contentType, cb);
+	} else {
+		NodeTika.extractText(uri, cb);
+	}
 };
 
-exports.meta = function(uri, contentType, cb) {
+exports.meta = function(uri, options, cb) {
+	var handler = function(err, meta) {
+		if (err) {
+			return cb(err);
+		}
+
+		cb(null, JSON.parse(meta));
+	};
+
 	if (arguments.length < 3) {
-		cb = contentType;
-		contentType = null;
+		cb = options;
+		options = null;
 	}
 
-	extractMeta(uri, contentType, cb);
+	if (options) {
+		NodeTika.extractMeta(uri, options.contentType, handler);
+	} else {
+		NodeTika.extractMeta(uri, handler);
+	}
 };
 
-exports.type = exports.contentType = function(uri, withCharset, cb) {
+exports.type = exports.contentType = function(uri, cb) {
+	NodeTika.detectContentType(uri, cb);
+};
+
+exports.charset = function(uri, options, cb) {
 	if (arguments.length < 3) {
-		cb = withCharset;
-		withCharset = false;
+		cb = options;
+		options = null;
 	}
 
-	NodeTika.detectContentType(uri, withCharset, cb);
+	if (options) {
+		NodeTika.detectCharset(uri, options.contentType, cb);
+	} else {
+		NodeTika.detectCharset(uri, cb);
+	}
 };
 
-exports.charset = function(uri, cb) {
-	NodeTika.detectCharset(uri, cb);
+exports.typeAndCharset = function(uri, cb) {
+	NodeTika.detectContentTypeAndCharset(uri, cb);
 };
 
 exports.language = function(text, cb) {
