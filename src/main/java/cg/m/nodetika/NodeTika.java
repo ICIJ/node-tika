@@ -33,6 +33,7 @@ import org.apache.tika.parser.Parser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.html.HtmlParser;
+import org.apache.tika.parser.ocr.TesseractOCRConfig;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.detect.AutoDetectReader;
@@ -150,8 +151,24 @@ public class NodeTika {
 		}
 	}
 
+	public static void fillParseContext(ParseContext parseContext, Map<String, String> options) {
+		TesseractOCRConfig ocrConfig = new TesseractOCRConfig();
+
+		final String ocrLanguage = options.get("ocrLanguage");
+		if (ocrLanguage != null) {
+			ocrConfig.setLanguage(ocrLanguage);
+		}
+
+		final String tesseractPath = options.get("tesseractPath");
+		if (tesseractPath != null) {
+			ocrConfig.setTesseractPath(tesseractPath);
+		}
+
+		parseContext.set(TesseractOCRConfig.class, ocrConfig);
+	}
+
 	public static String extractText(String uri, String optionsJson) throws Exception {
-		Map options = null;
+		Map<String, String> options = null;
 
 		if (optionsJson != null) {
 			options = new Gson().fromJson(optionsJson, HashMap.class);
@@ -160,7 +177,7 @@ public class NodeTika {
 		return extractText(uri, options);
 	}
 
-	public static String extractText(String uri, Map options) throws Exception {
+	public static String extractText(String uri, Map<String, String> options) throws Exception {
 		final AutoDetectParser parser = createParser();
 		final Metadata metadata = new Metadata();
 		final ParseContext context = new ParseContext();
@@ -169,8 +186,8 @@ public class NodeTika {
 		String contentType = null;
 
 		if (options != null) {
-			outputEncoding = options.get("outputEncoding").toString();
-			contentType = options.get("contentType").toString();
+			outputEncoding = options.get("outputEncoding");
+			contentType = options.get("contentType");
 		}
 
 		if (outputEncoding == null) {
@@ -179,6 +196,10 @@ public class NodeTika {
 
 		fillMetadata(parser, metadata, contentType, uri);
 
+		if (options != null) {
+			fillParseContext(context, options);
+		}
+
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		final OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);
 		final BodyContentHandler body = new BodyContentHandler(new RichTextContentHandler(writer));
@@ -186,7 +207,7 @@ public class NodeTika {
 		final TikaInputStream inputStream = createInputStream(uri, metadata);
 
 		try {
-			parser.parse(inputStream, body, metadata);
+			parser.parse(inputStream, body, metadata, context);
 		} catch (SAXException e) {
 			throw e;
 		} catch (EncryptedDocumentException e) {
@@ -201,7 +222,7 @@ public class NodeTika {
 	}
 
 	public static String extractXml(String uri, String outputFormat, String optionsJson) throws Exception {
-		Map options = null;
+		Map<String, String> options = null;
 
 		if (optionsJson != null) {
 			options = new Gson().fromJson(optionsJson, HashMap.class);
@@ -210,7 +231,7 @@ public class NodeTika {
 		return extractXml(uri, outputFormat, options);
 	}
 
-	public static String extractXml(String uri, String outputFormat, Map options) throws Exception {
+	public static String extractXml(String uri, String outputFormat, Map<String, String> options) throws Exception {
 		final AutoDetectParser parser = createParser();
 		final Metadata metadata = new Metadata();
 		final ParseContext context = new ParseContext();
@@ -219,8 +240,8 @@ public class NodeTika {
 		String contentType = null;
 
 		if (options != null) {
-			outputEncoding = options.get("outputEncoding").toString();
-			contentType = options.get("contentType").toString();
+			outputEncoding = options.get("outputEncoding");
+			contentType = options.get("contentType");
 		}
 
 		if (outputEncoding == null) {
@@ -228,6 +249,10 @@ public class NodeTika {
 		}
 
 		fillMetadata(parser, metadata, contentType, uri);
+
+		if (options != null) {
+			fillParseContext(context, options);
+		}
 
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		final OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);

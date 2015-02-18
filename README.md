@@ -44,6 +44,8 @@ The available options are the following.
 
  - `contentType` to provide a hint to Tika on which parser to use.
  - `outputEncoding` to specify the text output encoding. Defaults to "UTF-8".
+ - `ocrLanguage` to set the language used by Tesseract.
+ - `tesseractPath` to set the path to the Tesseract binaries.
 
 ### tika.extract(uri, [options,] cb) ###
 
