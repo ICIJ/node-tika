@@ -394,6 +394,16 @@ suite('encrypted doc tests', function() {
 			done();
 		});
 	});
+
+	test('specify password to decrypt document', function(done) {
+		tika.text('test/data/encrypted/file.pdf', {
+			password: 'password'
+		}, function(err, text) {
+			assert.ifError(err);
+			assert.equal(text.trim(), 'Just some text.');
+			done();
+		});
+	});
 });
 
 suite('error handling tests', function() {

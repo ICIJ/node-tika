@@ -46,6 +46,7 @@ The available options are the following.
  - `outputEncoding` to specify the text output encoding. Defaults to "UTF-8".
  - `ocrLanguage` to set the language used by Tesseract. This option is required to enabled OCR.
  - `tesseractPath` to set the path to the Tesseract binaries.
+ - `password` to set a password to be used for encrypted files.
 
 ### tika.extract(uri, [options,] cb) ###
 

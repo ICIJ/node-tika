@@ -32,6 +32,7 @@ import org.apache.tika.metadata.TikaMetadataKeys;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.PasswordProvider;
 import org.apache.tika.parser.html.HtmlParser;
 import org.apache.tika.parser.ocr.TesseractOCRConfig;
 import org.apache.tika.mime.MediaType;
@@ -154,6 +155,7 @@ public class NodeTika {
 	public static void fillParseContext(ParseContext parseContext, Map<String, String> options) {
 		final TesseractOCRConfig ocrConfig = new TesseractOCRConfig();
 		final String ocrLanguage = options != null ? options.get("ocrLanguage") : null;
+		final String password = options != null ? options.get("password") : null;
 
 		// Only set the OCR config object on the context if the language is specified.
 		if (ocrLanguage != null) {
@@ -172,6 +174,17 @@ public class NodeTika {
 		}
 
 		parseContext.set(TesseractOCRConfig.class, ocrConfig);
+
+		// Allow a password to be specified for encrypted files.
+		if (password != null) {
+			parseContext.set(PasswordProvider.class, new PasswordProvider() {
+
+				@Override
+				public String getPassword(Metadata metadata) {
+					return password;
+				}
+			});
+		}
 	}
 
 	public static String extractText(String uri, String optionsJson) throws Exception {
