@@ -69,6 +69,16 @@ tika.text('test/data/file.pdf', function(err, text) {
 });
 ```
 
+### tika.xhtml(uri, [options,] cb) ###
+
+Get an XHTML representation of the text extracted from a file.
+
+```javascript
+tika.xhtml('test/data/file.pdf', function(err, xhtml) {
+	console.log(xhtml);
+});
+```
+
 ### tika.meta(uri, [options,] cb) ###
 
 Extract metadata from a file. Returns an object with names as keys and arrays as values.
