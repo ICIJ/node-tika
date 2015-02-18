@@ -32,7 +32,7 @@ tika.text('http://www.ohchr.org/EN/UDHR/Documents/UDHR_Translations/eng.pdf', fu
 });
 ```
 
-Or extract text using OCR (requires Tesseract).
+Or extract text using OCR (requires [Tesseract](https://wiki.apache.org/tika/TikaOCR)).
 
 ```javascript
 tika.text('test/data/ocr/simple.jpg', {
