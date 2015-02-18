@@ -152,16 +152,23 @@ public class NodeTika {
 	}
 
 	public static void fillParseContext(ParseContext parseContext, Map<String, String> options) {
-		TesseractOCRConfig ocrConfig = new TesseractOCRConfig();
+		final TesseractOCRConfig ocrConfig = new TesseractOCRConfig();
+		final String ocrLanguage = options != null ? options.get("ocrLanguage") : null;
 
-		final String ocrLanguage = options.get("ocrLanguage");
+		// Only set the OCR config object on the context if the language is specified.
 		if (ocrLanguage != null) {
 			ocrConfig.setLanguage(ocrLanguage);
-		}
 
-		final String tesseractPath = options.get("tesseractPath");
-		if (tesseractPath != null) {
-			ocrConfig.setTesseractPath(tesseractPath);
+			final String tesseractPath = options.get("tesseractPath");
+			if (tesseractPath != null) {
+				ocrConfig.setTesseractPath(tesseractPath);
+			}
+
+		// Disable OCRing by default as it can give unexpected results.
+		} else if (System.getProperty("os.name").startsWith("Windows")) {
+			ocrConfig.setTesseractPath("\\Device\\Null\\");
+		} else {
+			ocrConfig.setTesseractPath("/dev/null/");
 		}
 
 		parseContext.set(TesseractOCRConfig.class, ocrConfig);
@@ -195,10 +202,7 @@ public class NodeTika {
 		}
 
 		fillMetadata(parser, metadata, contentType, uri);
-
-		if (options != null) {
-			fillParseContext(context, options);
-		}
+		fillParseContext(context, options);
 
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		final OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);
@@ -249,10 +253,7 @@ public class NodeTika {
 		}
 
 		fillMetadata(parser, metadata, contentType, uri);
-
-		if (options != null) {
-			fillParseContext(context, options);
-		}
+		fillParseContext(context, options);
 
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		final OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);
