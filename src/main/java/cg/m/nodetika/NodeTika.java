@@ -210,6 +210,10 @@ public class NodeTika {
 
 		final TikaInputStream inputStream = createInputStream(uri, metadata);
 
+		// Set up recursive parsing of archives.
+		// See: http://wiki.apache.org/tika/RecursiveMetadata
+		context.set(Parser.class, parser);
+
 		try {
 			parser.parse(inputStream, body, metadata, context);
 		} catch (SAXException e) {
@@ -268,6 +272,10 @@ public class NodeTika {
 		content = new ExpandedTitleContentHandler(handler);
 
 		final TikaInputStream inputStream = createInputStream(uri, metadata);
+
+		// Set up recursive parsing of archives.
+		// See: http://wiki.apache.org/tika/RecursiveMetadata
+		context.set(Parser.class, parser);
 
 		try {
 			parser.parse(inputStream, content, metadata, context);
