@@ -12,10 +12,11 @@
 	],
 	"homepage": "https://github.com/mattcg/node-tika",
 	"main": "./tika",
+	"author": "Matthew Caruana Galizia <m@m.cg>"
 	"contributors": [
 		{
-			"name": "Matthew Caruana Galizia",
-			"email": "m@m.cg"
+			"name": "Matthias Götzke",
+			"email": "m.goetzke@curasystems.de"
 		}
 	],
 	"repository": {
