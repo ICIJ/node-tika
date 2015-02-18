@@ -30,6 +30,8 @@ tika.extract('http://www.ohchr.org/EN/UDHR/Documents/UDHR_Translations/eng.pdf',
 });
 ```
 
+If the server returns a content-type header, it will be passed to Tika as a hint.
+
 ## API ##
 
 ```javascript

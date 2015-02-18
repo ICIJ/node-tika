@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.MalformedURLException;
 
 import java.lang.Exception;
@@ -52,10 +53,21 @@ public class NodeTika {
 	private static final TikaConfig config = TikaConfig.getDefaultConfig();
 
 	private static TikaInputStream createInputStream(String uri) throws FileNotFoundException, MalformedURLException, IOException {
+		return createInputStream(uri, null);
+	}
+
+	private static TikaInputStream createInputStream(String uri, Metadata metadata) throws FileNotFoundException, MalformedURLException, IOException {
 		InputStream inputStream;
 
 		if (uri.startsWith("http://") || uri.startsWith("https://") || uri.startsWith("ftp://")) {
-			inputStream = new URL(uri).openStream();
+			final URLConnection urlConnection = new URL(uri).openConnection();
+
+			// If a metadata object was passed, fill it with the content-type returned from the server.
+			if (metadata != null) {
+				fillMetadata(metadata, urlConnection.getContentType());
+			}
+
+			inputStream = urlConnection.getInputStream();
 		} else {
 			inputStream = new FileInputStream(uri);
 		}
@@ -76,7 +88,7 @@ public class NodeTika {
 			}
 
 			public void parse(InputStream inputStream, ContentHandler contentHandler, Metadata metadata, ParseContext parseContext) throws TikaException {
-				throw new TikaException("Unsupported Media Type");
+				throw new TikaException("Unsupported Media Type: " + metadata.get(HttpHeaders.CONTENT_TYPE));
 			}
 		});
 
@@ -101,10 +113,16 @@ public class NodeTika {
 		});
 	}
 
+	private static void fillMetadata(Metadata metadata, String contentType) {
+		fillMetadata(metadata, contentType, null);
+	}
+
 	private static void fillMetadata(Metadata metadata, String contentType, String uri) {
 
 		// Set the file name.
-		metadata.set(TikaMetadataKeys.RESOURCE_NAME_KEY, new File(uri).getName());
+		if (uri != null) {
+			metadata.set(TikaMetadataKeys.RESOURCE_NAME_KEY, new File(uri).getName());
+		}
 
 		// Normalise the content-type.
 		if (contentType != null && "xml".equals(MediaType.parse(contentType).getSubtype())) {
@@ -112,6 +130,11 @@ public class NodeTika {
 		}
 
 		if (contentType != null && contentType.equals(MediaType.OCTET_STREAM)) {
+			contentType = null;
+		}
+
+		// URLConnection returns content/unknown as the default content-type.
+		if (contentType != null && contentType.equals("content/unknown")) {
 			contentType = null;
 		}
 
@@ -140,7 +163,7 @@ public class NodeTika {
 		OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);
 		BodyContentHandler body = new BodyContentHandler(new RichTextContentHandler(writer));
 
-		TikaInputStream inputStream = createInputStream(uri);
+		TikaInputStream inputStream = createInputStream(uri, metadata);
 
 		try {
 			parser.parse(inputStream, body, metadata);
@@ -167,7 +190,7 @@ public class NodeTika {
 
 		fillMetadata(parser, metadata, contentType, uri);
 
-		final TikaInputStream inputStream = createInputStream(uri);
+		final TikaInputStream inputStream = createInputStream(uri, metadata);
 
 		parser.parse(inputStream, new DefaultHandler(), metadata);
 
@@ -187,11 +210,12 @@ public class NodeTika {
 	}
 
 	public static String detectCharset(String uri, String contentType) throws FileNotFoundException, IOException, TikaException {
-		final TikaInputStream inputStream = createInputStream(uri);
 		final Metadata metadata = new Metadata();
 
 		// Use metadata to provide type-hinting to the AutoDetectReader.
 		fillMetadata(metadata, contentType, uri);
+
+		final TikaInputStream inputStream = createInputStream(uri, metadata);
 
 		// Detect the character set.
 		final AutoDetectReader reader = new AutoDetectReader(inputStream, metadata);
