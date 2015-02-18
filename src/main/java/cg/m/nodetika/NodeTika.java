@@ -174,7 +174,7 @@ public class NodeTika {
 		Map meta = new HashMap();
 		for (String name : metadata.names()) {
 			String[] values = metadata.getValues(name);
-			meta.put(name, values[0]);
+			meta.put(name, values);
 		}
 
 		inputStream.close();

@@ -49,7 +49,7 @@ Extract both text and metadata from a file.
 ```javascript
 tika.extract('test/data/file.pdf', function(err, text, meta) {
 	console.log(text); // Logs 'Just some text'.
-	console.log(meta.producer); // Logs 'LibreOffice 4.1'.
+	console.log(meta.producer[0]); // Logs 'LibreOffice 4.1'.
 });
 ```
 
@@ -65,11 +65,11 @@ tika.text('test/data/file.pdf', function(err, text) {
 
 ### tika.meta(uri, [options,] cb) ###
 
-Extract metadata from a file. Returns an object with names as keys.
+Extract metadata from a file. Returns an object with names as keys and arrays as values.
 
 ```javascript
 tika.meta('test/data/file.pdf', function(err, meta) {
-	console.log(meta.producer); // Logs 'LibreOffice 4.1'.
+	console.log(meta.producer[0]); // Logs 'LibreOffice 4.1'.
 });
 ```
 
