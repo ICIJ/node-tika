@@ -43,8 +43,8 @@ All methods that accept a `uri` parameter accept relative or absolute file paths
 The available options are the following.
 
  - `contentType` to provide a hint to Tika on which parser to use.
- - `outputEncoding` to specify the text output encoding. Defaults to "UTF-8".
- - `ocrLanguage` to set the language used by Tesseract. This option is required to enabled OCR.
+ - `outputEncoding` to specify the text output encoding. Defaults to UTF-8.
+ - `ocrLanguage` to set the language used by Tesseract. This option is required to enable OCR.
  - `tesseractPath` to set the path to the Tesseract binaries.
  - `password` to set a password to be used for encrypted files.
 
