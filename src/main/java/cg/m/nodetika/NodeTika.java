@@ -38,6 +38,7 @@ import org.apache.tika.detect.Detector;
 import org.apache.tika.detect.AutoDetectReader;
 import org.apache.tika.language.LanguageIdentifier;
 import org.apache.tika.sax.BodyContentHandler;
+import org.apache.tika.sax.ExpandedTitleContentHandler;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.exception.EncryptedDocumentException;
@@ -45,6 +46,11 @@ import org.apache.tika.exception.EncryptedDocumentException;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.stream.StreamResult;
 
 import com.google.gson.Gson;
 
@@ -76,7 +82,7 @@ public class NodeTika {
 	}
 
 	private static AutoDetectParser createParser() {
-		final AutoDetectParser parser = new AutoDetectParser();
+		final AutoDetectParser parser = new AutoDetectParser(config);
 
 		Map<MediaType, Parser> parsers = parser.getParsers();
 		parsers.put(MediaType.APPLICATION_XML, new HtmlParser());
@@ -159,11 +165,11 @@ public class NodeTika {
 
 		fillMetadata(parser, metadata, contentType, uri);
 
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);
-		BodyContentHandler body = new BodyContentHandler(new RichTextContentHandler(writer));
+		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		final OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);
+		final BodyContentHandler body = new BodyContentHandler(new RichTextContentHandler(writer));
 
-		TikaInputStream inputStream = createInputStream(uri, metadata);
+		final TikaInputStream inputStream = createInputStream(uri, metadata);
 
 		try {
 			parser.parse(inputStream, body, metadata);
@@ -177,7 +183,51 @@ public class NodeTika {
 			inputStream.close();
 		}
 
-		return outputStream.toString("UTF-8");
+		return outputStream.toString(outputEncoding);
+	}
+
+	public static String extractXml(String uri, String outputFormat) throws Exception {
+		return extractXml(uri, outputFormat, null);
+	}
+
+	public static String extractXml(String uri, String outputFormat, String contentType) throws Exception {
+		return extractXml(uri, outputFormat, contentType, "UTF-8");
+	}
+
+	public static String extractXml(String uri, String outputFormat, String contentType, String outputEncoding) throws Exception {
+		final AutoDetectParser parser = createParser();
+		final Metadata metadata = new Metadata();
+		final ParseContext context = new ParseContext();
+
+		fillMetadata(parser, metadata, contentType, uri);
+
+		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		final OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);
+		ContentHandler content;
+
+		SAXTransformerFactory factory = (SAXTransformerFactory)SAXTransformerFactory.newInstance();
+		TransformerHandler handler = factory.newTransformerHandler();
+		handler.getTransformer().setOutputProperty(OutputKeys.METHOD, outputFormat);
+		handler.getTransformer().setOutputProperty(OutputKeys.INDENT, "no");
+		handler.getTransformer().setOutputProperty(OutputKeys.ENCODING, outputEncoding);
+		handler.setResult(new StreamResult(writer));
+		content = new ExpandedTitleContentHandler(handler);
+
+		final TikaInputStream inputStream = createInputStream(uri, metadata);
+
+		try {
+			parser.parse(inputStream, content, metadata, context);
+		} catch (SAXException e) {
+			throw e;
+		} catch (EncryptedDocumentException e) {
+			throw e;
+		} catch (TikaException e) {
+			throw e;
+		} finally {
+			inputStream.close();
+		}
+
+		return outputStream.toString(outputEncoding);
 	}
 
 	public static String extractMeta(String uri) throws Exception {

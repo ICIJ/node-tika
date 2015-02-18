@@ -47,6 +47,19 @@ exports.text = function(uri, options, cb) {
 	}
 };
 
+exports.xhtml = function(uri, options, cb) {
+	if (arguments.length < 3) {
+		cb = options;
+		options = null;
+	}
+
+	if (options) {
+		NodeTika.extractXml(uri, 'html', options.contentType, cb);
+	} else {
+		NodeTika.extractXml(uri, 'html', cb);
+	}
+};
+
 exports.meta = function(uri, options, cb) {
 	var handler = function(err, meta) {
 		if (err) {
