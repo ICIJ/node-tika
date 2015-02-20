@@ -133,17 +133,17 @@ public class NodeTika {
 		}
 
 		// Normalise the content-type.
-		if (contentType != null && "xml".equals(MediaType.parse(contentType).getSubtype())) {
-			contentType = null;
-		}
+		if (contentType != null) {
+			if ("xml".equals(MediaType.parse(contentType).getSubtype())) {
+				contentType = null;
 
-		if (contentType != null && contentType.equals(MediaType.OCTET_STREAM)) {
-			contentType = null;
-		}
+			} else if (contentType.equals(MediaType.OCTET_STREAM)) {
+				contentType = null;
 
-		// URLConnection returns content/unknown as the default content-type.
-		if (contentType != null && contentType.equals("content/unknown")) {
-			contentType = null;
+			// URLConnection returns content/unknown as the default content-type.
+			} else if (contentType.equals("content/unknown")) {
+				contentType = null;
+			}
 		}
 
 		// Set the content-type.
@@ -241,8 +241,17 @@ public class NodeTika {
 		String contentType = null;
 
 		if (options != null) {
-			outputEncoding = String.valueOf(options.get("outputEncoding"));
-			contentType = String.valueOf(options.get("contentType"));
+			Object option;
+
+			option = options.get("outputEncoding");
+			if (option != null) {
+				outputEncoding = option.toString();
+			}
+
+			option = options.get("contentType");
+			if (option != null) {
+				contentType = option.toString();
+			}
 		}
 
 		if (outputEncoding == null) {
@@ -296,8 +305,17 @@ public class NodeTika {
 		String contentType = null;
 
 		if (options != null) {
-			outputEncoding = String.valueOf(options.get("outputEncoding"));
-			contentType = String.valueOf(options.get("contentType"));
+			Object option;
+
+			option = options.get("outputEncoding");
+			if (option != null) {
+				outputEncoding = option.toString();
+			}
+
+			option = options.get("contentType");
+			if (option != null) {
+				contentType = option.toString();
+			}
 		}
 
 		if (outputEncoding == null) {
