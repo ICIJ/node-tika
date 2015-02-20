@@ -50,13 +50,29 @@ The available options are the following.
 
  - `contentType` to provide a hint to Tika on which parser to use.
  - `outputEncoding` to specify the text output encoding. Defaults to UTF-8.
+ - `password` to set a password to be used for encrypted files.
+
+### OCR options ###
+
  - `ocrLanguage` to set the language used by Tesseract. This option is required to enable OCR.
  - `ocrPath` to set the path to the Tesseract binaries.
- - `ocrMaxFileSize` to set maximum file size to submit to OCR.
- - `ocrMinFileSize` to set minimum file size to submit to OCR.
+ - `ocrMaxFileSize` to set maximum file size in bytes to submit to OCR.
+ - `ocrMinFileSize` to set minimum file size in bytes to submit to OCR.
  - `ocrPageSegmentationMode` to set the Tesseract page segmentation mode.
  - `ocrTimeout` to set the maximum time in seconds to wait for the Tesseract process to terminate.
- - `password` to set a password to be used for encrypted files.
+
+### PDF parser options ###
+
+ - `pdfAverageCharTolerance` see [`PDFTextStripper.setAverageCharTolerance(float)`](http://pdfbox.apache.org/docs/1.8.8/javadocs/org/apache/pdfbox/util/PDFTextStripper.html#setAverageCharTolerance%28float%29).
+ - `pdfEnableAutoSpace` to set whether the parser should estimate where spaces should be inserted between words (`true` by default).
+ - `pdfExtractAcroFormContent` to set whether content should be extracted from AcroForms at the end of the document (`true` by default).
+ - `pdfExtractAnnotationText` to set whether to extract text from annotations (`true` by default).
+ - `pdfExtractInlineImages` to set whether to extract inline embedded OBX images.
+ - `pdfExtractUniqueInlineImagesOnly` as multiple pages within a PDF file might refer to the same underlying image.
+ - `pdfSortByPosition` to set whether to sort text tokens by their x/y position before extracting text.
+ - `pdfSpacingTolerance` see [`PDFTextStripper.setSpacingTolerance(float)`](http://pdfbox.apache.org/docs/1.8.8/javadocs/org/apache/pdfbox/util/PDFTextStripper.html#setSpacingTolerance%28float%29).
+ - `pdfSuppressDuplicateOverlappingText` to set whether the parse should try to remove duplicated text over the same region.
+ - `pdfUseNonSequentialParser` to set whether to use PDFBox's non-sequential parser.
 
 ### tika.extract(uri, [options,] cb) ###
 

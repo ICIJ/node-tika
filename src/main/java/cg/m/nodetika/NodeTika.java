@@ -35,6 +35,7 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.PasswordProvider;
 import org.apache.tika.parser.html.HtmlParser;
 import org.apache.tika.parser.ocr.TesseractOCRConfig;
+import org.apache.tika.parser.pdf.PDFParserConfig;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.detect.AutoDetectReader;
@@ -109,6 +110,7 @@ public class NodeTika {
 		final Detector detector = parser.getDetector();
 
 		parser.setDetector(new Detector() {
+
 			public MediaType detect(InputStream inputStream, Metadata metadata) throws IOException {
 				String contentType = metadata.get(HttpHeaders.CONTENT_TYPE);
 
@@ -152,7 +154,7 @@ public class NodeTika {
 		}
 	}
 
-	public static void fillParseContext(ParseContext parseContext, Map<String, Object> options) {
+	private static void fillParseContext(ParseContext parseContext, Map<String, Object> options) {
 		final TesseractOCRConfig ocrConfig = new TesseractOCRConfig();
 
 		if (options == null) {
@@ -164,53 +166,123 @@ public class NodeTika {
 			return;
 		}
 
+		fillOcrOptions(ocrConfig, options);
+		parseContext.set(TesseractOCRConfig.class, ocrConfig);
+
+		final PDFParserConfig pdfParserConfig = new PDFParserConfig();
+		fillPdfOptions(pdfParserConfig, options);
+		parseContext.set(PDFParserConfig.class, pdfParserConfig);
+
+		// Allow a password to be specified for encrypted files.
+		fillPassword(parseContext, options);
+	}
+
+	private static void fillPassword(ParseContext parseContext, Map<String, Object> options) {
+		final Object password = options.get("password");
+
+		if (password == null) {
+			return;
+		}
+
+		parseContext.set(PasswordProvider.class, new PasswordProvider() {
+
+			@Override
+			public String getPassword(Metadata metadata) {
+				return password.toString();
+			}
+		});
+	}
+
+	private static void fillPdfOptions(PDFParserConfig pdfParserConfig, Map<String, Object> options) {
+		final Object averageCharTolerance = options.get("averageCharTolerance");
+		final Object enableAutoSpace = options.get("enableAutoSpace");
+		final Object extractAcroFormContent = options.get("extractAcroFormContent");
+		final Object extractAnnotationText = options.get("extractAnnotationText");
+		final Object extractInlineImages = options.get("extractInlineImages");
+		final Object extractUniqueInlineImagesOnly = options.get("extractUniqueInlineImagesOnly");
+		final Object sortByPosition = options.get("sortByPosition");
+		final Object spacingTolerance = options.get("spacingTolerance");
+		final Object suppressDuplicateOverlappingText = options.get("suppressDuplicateOverlappingText");
+		final Object useNonSequentialParser = options.get("useNonSequentialParser");
+
+		if (averageCharTolerance != null) {
+			pdfParserConfig.setAverageCharTolerance(Float.parseFloat(averageCharTolerance.toString()));
+		}
+
+		if (enableAutoSpace != null) {
+			pdfParserConfig.setEnableAutoSpace((Boolean) enableAutoSpace);
+		}
+
+		if (extractAcroFormContent != null) {
+			pdfParserConfig.setExtractAcroFormContent((Boolean) extractAcroFormContent);
+		}
+
+		if (extractAnnotationText != null) {
+			pdfParserConfig.setExtractAnnotationText((Boolean) extractAnnotationText);
+		}
+
+		if (extractInlineImages != null) {
+			pdfParserConfig.setExtractInlineImages((Boolean) extractInlineImages);
+		}
+
+		if (extractUniqueInlineImagesOnly != null) {
+			pdfParserConfig.setExtractUniqueInlineImagesOnly((Boolean) extractUniqueInlineImagesOnly);
+		}
+
+		if (sortByPosition != null) {
+			pdfParserConfig.setSortByPosition((Boolean) sortByPosition);
+		}
+
+		if (spacingTolerance != null) {
+			pdfParserConfig.setSpacingTolerance(Float.parseFloat(spacingTolerance.toString()));
+		}
+
+		if (suppressDuplicateOverlappingText != null) {
+			pdfParserConfig.setSuppressDuplicateOverlappingText((Boolean) suppressDuplicateOverlappingText);
+		}
+
+		if (useNonSequentialParser != null) {
+			pdfParserConfig.setUseNonSequentialParser((Boolean) useNonSequentialParser);
+		}
+	}
+
+	private static void fillOcrOptions(TesseractOCRConfig ocrConfig, Map<String, Object> options) {
+
 		// Only set the OCR config object on the context if the language is specified.
 		// OCR is disabled by default as it can give unexpected results.
 		final Object ocrLanguage = options.get("ocrLanguage");
-		if (ocrLanguage != null) {
-			ocrConfig.setLanguage(ocrLanguage.toString());
-
-			final Object ocrPath = options.get("ocrPath");
-			final Object ocrMaxFileSize = options.get("ocrMaxFileSize");
-			final Object ocrMinFileSize = options.get("ocrMinFileSize");
-			final Object ocrPageSegmentationMode = options.get("ocrPageSegmentationMode");
-			final Object ocrTimeout = options.get("ocrTimeout");
-
-			if (ocrPath != null) {
-				ocrConfig.setTesseractPath(ocrPath.toString());
-			}
-
-			if (ocrMaxFileSize != null) {
-				ocrConfig.setMaxFileSizeToOcr(Integer.parseInt(ocrMaxFileSize.toString()));
-			}
-
-			if (ocrMinFileSize != null) {
-				ocrConfig.setMinFileSizeToOcr(Integer.parseInt(ocrMinFileSize.toString()));
-			}
-
-			if (ocrPageSegmentationMode != null) {
-				ocrConfig.setPageSegMode(ocrPageSegmentationMode.toString());
-			}
-
-			if (ocrTimeout != null) {
-				ocrConfig.setTimeout(Integer.parseInt(ocrTimeout.toString()));
-			}
-		} else {
+		if (ocrLanguage == null) {
 			disableOcr(ocrConfig);
+
+			return;
 		}
 
-		parseContext.set(TesseractOCRConfig.class, ocrConfig);
+		ocrConfig.setLanguage(ocrLanguage.toString());
 
-		// Allow a password to be specified for encrypted files.
-		final Object password = options.get("password");
-		if (password != null) {
-			parseContext.set(PasswordProvider.class, new PasswordProvider() {
+		final Object ocrPath = options.get("ocrPath");
+		final Object ocrMaxFileSize = options.get("ocrMaxFileSize");
+		final Object ocrMinFileSize = options.get("ocrMinFileSize");
+		final Object ocrPageSegmentationMode = options.get("ocrPageSegmentationMode");
+		final Object ocrTimeout = options.get("ocrTimeout");
 
-				@Override
-				public String getPassword(Metadata metadata) {
-					return password.toString();
-				}
-			});
+		if (ocrPath != null) {
+			ocrConfig.setTesseractPath(ocrPath.toString());
+		}
+
+		if (ocrMaxFileSize != null) {
+			ocrConfig.setMaxFileSizeToOcr(Integer.parseInt(ocrMaxFileSize.toString()));
+		}
+
+		if (ocrMinFileSize != null) {
+			ocrConfig.setMinFileSizeToOcr(Integer.parseInt(ocrMinFileSize.toString()));
+		}
+
+		if (ocrPageSegmentationMode != null) {
+			ocrConfig.setPageSegMode(ocrPageSegmentationMode.toString());
+		}
+
+		if (ocrTimeout != null) {
+			ocrConfig.setTimeout(Integer.parseInt(ocrTimeout.toString()));
 		}
 	}
 
