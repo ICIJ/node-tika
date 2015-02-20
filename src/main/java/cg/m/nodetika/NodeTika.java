@@ -135,23 +135,33 @@ public class NodeTika {
 		}
 
 		// Normalise the content-type.
-		if (contentType != null) {
-			if ("xml".equals(MediaType.parse(contentType).getSubtype())) {
-				contentType = null;
-
-			} else if (contentType.equals(MediaType.OCTET_STREAM)) {
-				contentType = null;
-
-			// URLConnection returns content/unknown as the default content-type.
-			} else if (contentType.equals("content/unknown")) {
-				contentType = null;
-			}
-		}
+		contentType = normalizeContentType(contentType);
 
 		// Set the content-type.
 		if (contentType != null) {
 			metadata.add(HttpHeaders.CONTENT_TYPE, contentType);
 		}
+	}
+
+	private static String normalizeContentType(String contentType) {
+		if (contentType == null) {
+			return null;
+		}
+
+		// URLConnection returns content/unknown as the default content-type.
+		if (contentType.equals("content/unknown")) {
+			return null;
+		}
+
+		if (contentType.equals(MediaType.OCTET_STREAM)) {
+			return null;
+		}
+
+		if ("xml".equals(MediaType.parse(contentType).getSubtype())) {
+			return null;
+		}
+
+		return contentType;
 	}
 
 	private static void fillParseContext(ParseContext parseContext, Map<String, Object> options) {
