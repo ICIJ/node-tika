@@ -297,6 +297,9 @@ public class NodeTika {
 	}
 
 	private static void disableOcr(TesseractOCRConfig ocrConfig) {
+
+		// This is necessary until Tika introduces a way to blacklist parsers.
+		// See https://issues.apache.org/jira/browse/TIKA-1557
 		if (System.getProperty("os.name").startsWith("Windows")) {
 			ocrConfig.setTesseractPath("\\Device\\Null\\");
 		} else {
