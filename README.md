@@ -51,7 +51,11 @@ The available options are the following.
  - `contentType` to provide a hint to Tika on which parser to use.
  - `outputEncoding` to specify the text output encoding. Defaults to UTF-8.
  - `ocrLanguage` to set the language used by Tesseract. This option is required to enable OCR.
- - `tesseractPath` to set the path to the Tesseract binaries.
+ - `ocrPath` to set the path to the Tesseract binaries.
+ - `ocrMaxFileSize` to set maximum file size to submit to OCR.
+ - `ocrMinFileSize` to set minimum file size to submit to OCR.
+ - `ocrPageSegmentationMode` to set the Tesseract page segmentation mode.
+ - `ocrTimeout` to set the maximum time in seconds to wait for the Tesseract process to terminate.
  - `password` to set a password to be used for encrypted files.
 
 ### tika.extract(uri, [options,] cb) ###

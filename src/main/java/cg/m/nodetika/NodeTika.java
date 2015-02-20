@@ -152,43 +152,78 @@ public class NodeTika {
 		}
 	}
 
-	public static void fillParseContext(ParseContext parseContext, Map<String, String> options) {
+	public static void fillParseContext(ParseContext parseContext, Map<String, Object> options) {
 		final TesseractOCRConfig ocrConfig = new TesseractOCRConfig();
-		final String ocrLanguage = options != null ? options.get("ocrLanguage") : null;
-		final String password = options != null ? options.get("password") : null;
+
+		if (options == null) {
+
+			// Disable OCR and return if no options are specified.
+			disableOcr(ocrConfig);
+			parseContext.set(TesseractOCRConfig.class, ocrConfig);
+
+			return;
+		}
 
 		// Only set the OCR config object on the context if the language is specified.
+		// OCR is disabled by default as it can give unexpected results.
+		final Object ocrLanguage = options.get("ocrLanguage");
 		if (ocrLanguage != null) {
-			ocrConfig.setLanguage(ocrLanguage);
+			ocrConfig.setLanguage(ocrLanguage.toString());
 
-			final String tesseractPath = options.get("tesseractPath");
-			if (tesseractPath != null) {
-				ocrConfig.setTesseractPath(tesseractPath);
+			final Object ocrPath = options.get("ocrPath");
+			final Object ocrMaxFileSize = options.get("ocrMaxFileSize");
+			final Object ocrMinFileSize = options.get("ocrMinFileSize");
+			final Object ocrPageSegmentationMode = options.get("ocrPageSegmentationMode");
+			final Object ocrTimeout = options.get("ocrTimeout");
+
+			if (ocrPath != null) {
+				ocrConfig.setTesseractPath(ocrPath.toString());
 			}
 
-		// Disable OCRing by default as it can give unexpected results.
-		} else if (System.getProperty("os.name").startsWith("Windows")) {
-			ocrConfig.setTesseractPath("\\Device\\Null\\");
+			if (ocrMaxFileSize != null) {
+				ocrConfig.setMaxFileSizeToOcr(Integer.parseInt(ocrMaxFileSize.toString()));
+			}
+
+			if (ocrMinFileSize != null) {
+				ocrConfig.setMinFileSizeToOcr(Integer.parseInt(ocrMinFileSize.toString()));
+			}
+
+			if (ocrPageSegmentationMode != null) {
+				ocrConfig.setPageSegMode(ocrPageSegmentationMode.toString());
+			}
+
+			if (ocrTimeout != null) {
+				ocrConfig.setTimeout(Integer.parseInt(ocrTimeout.toString()));
+			}
 		} else {
-			ocrConfig.setTesseractPath("/dev/null/");
+			disableOcr(ocrConfig);
 		}
 
 		parseContext.set(TesseractOCRConfig.class, ocrConfig);
 
 		// Allow a password to be specified for encrypted files.
+		final Object password = options.get("password");
 		if (password != null) {
 			parseContext.set(PasswordProvider.class, new PasswordProvider() {
 
 				@Override
 				public String getPassword(Metadata metadata) {
-					return password;
+					return password.toString();
 				}
 			});
 		}
 	}
 
+	private static void disableOcr(TesseractOCRConfig ocrConfig) {
+		if (System.getProperty("os.name").startsWith("Windows")) {
+			ocrConfig.setTesseractPath("\\Device\\Null\\");
+		} else {
+			ocrConfig.setTesseractPath("/dev/null/");
+		}
+	}
+
 	public static String extractText(String uri, String optionsJson) throws Exception {
-		Map<String, String> options = null;
+		Map<String, Object> options = null;
 
 		if (optionsJson != null) {
 			options = new Gson().fromJson(optionsJson, HashMap.class);
@@ -197,7 +232,7 @@ public class NodeTika {
 		return extractText(uri, options);
 	}
 
-	public static String extractText(String uri, Map<String, String> options) throws Exception {
+	public static String extractText(String uri, Map<String, Object> options) throws Exception {
 		final AutoDetectParser parser = createParser();
 		final Metadata metadata = new Metadata();
 		final ParseContext context = new ParseContext();
@@ -206,8 +241,8 @@ public class NodeTika {
 		String contentType = null;
 
 		if (options != null) {
-			outputEncoding = options.get("outputEncoding");
-			contentType = options.get("contentType");
+			outputEncoding = String.valueOf(options.get("outputEncoding"));
+			contentType = String.valueOf(options.get("contentType"));
 		}
 
 		if (outputEncoding == null) {
@@ -243,7 +278,7 @@ public class NodeTika {
 	}
 
 	public static String extractXml(String uri, String outputFormat, String optionsJson) throws Exception {
-		Map<String, String> options = null;
+		Map<String, Object> options = null;
 
 		if (optionsJson != null) {
 			options = new Gson().fromJson(optionsJson, HashMap.class);
@@ -252,7 +287,7 @@ public class NodeTika {
 		return extractXml(uri, outputFormat, options);
 	}
 
-	public static String extractXml(String uri, String outputFormat, Map<String, String> options) throws Exception {
+	public static String extractXml(String uri, String outputFormat, Map<String, Object> options) throws Exception {
 		final AutoDetectParser parser = createParser();
 		final Metadata metadata = new Metadata();
 		final ParseContext context = new ParseContext();
@@ -261,8 +296,8 @@ public class NodeTika {
 		String contentType = null;
 
 		if (options != null) {
-			outputEncoding = options.get("outputEncoding");
-			contentType = options.get("contentType");
+			outputEncoding = String.valueOf(options.get("outputEncoding"));
+			contentType = String.valueOf(options.get("contentType"));
 		}
 
 		if (outputEncoding == null) {
