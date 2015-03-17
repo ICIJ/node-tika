@@ -204,16 +204,16 @@ public class NodeTika {
 	}
 
 	private static void fillPdfOptions(PDFParserConfig pdfParserConfig, Map<String, Object> options) {
-		final Object averageCharTolerance = options.get("averageCharTolerance");
-		final Object enableAutoSpace = options.get("enableAutoSpace");
-		final Object extractAcroFormContent = options.get("extractAcroFormContent");
-		final Object extractAnnotationText = options.get("extractAnnotationText");
-		final Object extractInlineImages = options.get("extractInlineImages");
-		final Object extractUniqueInlineImagesOnly = options.get("extractUniqueInlineImagesOnly");
-		final Object sortByPosition = options.get("sortByPosition");
-		final Object spacingTolerance = options.get("spacingTolerance");
-		final Object suppressDuplicateOverlappingText = options.get("suppressDuplicateOverlappingText");
-		final Object useNonSequentialParser = options.get("useNonSequentialParser");
+		final Object averageCharTolerance = options.get("pdfAverageCharTolerance");
+		final Object enableAutoSpace = options.get("pdfEnableAutoSpace");
+		final Object extractAcroFormContent = options.get("pdfExtractAcroFormContent");
+		final Object extractAnnotationText = options.get("pdfExtractAnnotationText");
+		final Object extractInlineImages = options.get("pdfExtractInlineImages");
+		final Object extractUniqueInlineImagesOnly = options.get("pdfExtractUniqueInlineImagesOnly");
+		final Object sortByPosition = options.get("pdfSortByPosition");
+		final Object spacingTolerance = options.get("pdfSpacingTolerance");
+		final Object suppressDuplicateOverlappingText = options.get("pdfSuppressDuplicateOverlappingText");
+		final Object useNonSequentialParser = options.get("pdfUseNonSequentialParser");
 
 		if (averageCharTolerance != null) {
 			pdfParserConfig.setAverageCharTolerance(Float.parseFloat(averageCharTolerance.toString()));
