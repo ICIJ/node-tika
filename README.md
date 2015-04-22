@@ -1,12 +1,14 @@
 # node-tika #
 
-Provides text extraction, metadata extraction, mime-type detection, text-encoding detection and language detection. All via a native Java bridge with the Apache Tika content-analysis toolkit. Bundles [Tika 1.7](http://tika.apache.org/1.7/index.html).
+Provides text extraction, metadata extraction, mime-type detection, text-encoding detection and language 
+detection. All via a native Java bridge with the Apache Tika content-analysis toolkit. Bundles [Tika 1.8](http://tika.apache.org/1.8/index.html).
 
 [![Build Status](https://travis-ci.org/mattcg/node-tika.png?branch=master)](https://travis-ci.org/mattcg/node-tika) [![npm version](https://badge.fury.io/js/tika.png)](https://badge.fury.io/js/tika)
 
 Depends on [node-java](https://github.com/joeferner/node-java), which itself requires the JDK and Python 2 (not 3) to compile.
 
-Requires JDK 7. Run `node version` to check the version that `node-java` is using. If the wrong version is reported even if you installed JDK 1.7, make sure `JAVA_HOME` is set to the correct path then delete `node_modules/java` and rerun `npm install`.
+Requires JDK 7. Run `node version` to check the version that `node-java` is using. If the wrong version is 
+reported even if you installed JDK 1.7, make sure `JAVA_HOME` is set to the correct path then delete `node_modules/java` and rerun `npm install`.
 
 ## Extracting text ##
 

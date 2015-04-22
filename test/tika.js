@@ -418,7 +418,7 @@ suite('error handling tests', function() {
 	test('extract from encrypted pdf', function(done) {
 		tika.text('test/data/encrypted/file.pdf', function(err, text) {
 			assert.ok(err);
-			assert.ok(-1 !== err.toString().indexOf('TikaException: Unable to extract PDF content'));
+			assert.ok(-1 !== err.toString().indexOf('Unable to process: document is encrypted'));
 			done();
 		});
 	});
