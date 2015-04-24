@@ -3,7 +3,7 @@
 Provides text extraction, metadata extraction, mime-type detection, text-encoding detection and language 
 detection. All via a native Java bridge with the Apache Tika content-analysis toolkit. Bundles [Tika 1.8](http://tika.apache.org/1.8/index.html).
 
-[![Build Status](https://travis-ci.org/icij/node-tika.png?branch=master)](https://travis-ci.org/icij/node-tika) [![npm version](https://badge.fury.io/js/tika.png)](https://badge.fury.io/js/tika)
+[![Build Status](https://travis-ci.org/ICIJ/node-tika.png?branch=master)](https://travis-ci.org/ICIJ/node-tika) [![npm version](https://badge.fury.io/js/tika.png)](https://badge.fury.io/js/tika)
 
 Depends on [node-java](https://github.com/joeferner/node-java), which itself requires the JDK and Python 2 (not 3) to compile.
 
