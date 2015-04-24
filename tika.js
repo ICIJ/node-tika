@@ -1,8 +1,8 @@
 /**
  * @overview
- * @author Matthew Caruana Galizia <m@m.cg>
+ * @author Matthew Caruana Galizia <mcaruana@icij.org>
  * @license MIT
- * @copyright Copyright (c) 2013, Matthew Caruana Galizia
+ * @copyright Copyright (c) 2013 The Center for Public Integrity®
  */
 
 /*jshint node:true*/

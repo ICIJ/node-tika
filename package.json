@@ -10,9 +10,9 @@
 		"content analysis",
 		"office"
 	],
-	"homepage": "https://github.com/mattcg/node-tika",
+	"homepage": "https://github.com/icij/node-tika",
 	"main": "./tika",
-	"author": "Matthew Caruana Galizia <m@m.cg>",
+	"author": "Matthew Caruana Galizia <mcaruana@icij.org>",
 	"contributors": [
 		{
 			"name": "Matthias Götzke",
@@ -21,15 +21,14 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/mattcg/node-tika.git"
+		"url": "https://github.com/icij/node-tika.git"
 	},
 	"bugs": {
-		"url": "https://github.com/mattcg/node-tika/issues"
+		"url": "https://github.com/icij/node-tika/issues"
 	},
 	"licenses": [
 		{
-			"type": "MIT",
-			"url": "http://mattcg.mit-license.org/"
+			"type": "MIT"
 		}
 	],
 	"dependencies": {

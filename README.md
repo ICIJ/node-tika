@@ -3,7 +3,7 @@
 Provides text extraction, metadata extraction, mime-type detection, text-encoding detection and language 
 detection. All via a native Java bridge with the Apache Tika content-analysis toolkit. Bundles [Tika 1.8](http://tika.apache.org/1.8/index.html).
 
-[![Build Status](https://travis-ci.org/mattcg/node-tika.png?branch=master)](https://travis-ci.org/mattcg/node-tika) [![npm version](https://badge.fury.io/js/tika.png)](https://badge.fury.io/js/tika)
+[![Build Status](https://travis-ci.org/icij/node-tika.png?branch=master)](https://travis-ci.org/icij/node-tika) [![npm version](https://badge.fury.io/js/tika.png)](https://badge.fury.io/js/tika)
 
 Depends on [node-java](https://github.com/joeferner/node-java), which itself requires the JDK and Python 2 (not 3) to compile.
 
@@ -162,10 +162,12 @@ tika.language('This is just some text in English.', function(err, language, reas
 
 ## Credits and collaboration ##
 
-Developed by [Matthew Caruana Galizia](https://twitter.com/mcaruanagalizia). Please feel free to submit an issue or pull request.
+Developed by [Matthew Caruana Galizia](https://twitter.com/mcaruanagalizia) at the [ICIJ](http://www.icij.org/).
+
+Please feel free to submit an issue or pull request. Don't forget to add your name to the `CONTRIBUTORS` file.
 
 ## License ##
 
-Copyright (c) 2013 Matthew Caruana Galizia. Licensed under an [MIT-style license](http://mattcg.mit-license.org).
+Copyright (c) 2013 The Center for Public Integrity®. See `LICENSE`.
 
 Apache Tika JAR distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).

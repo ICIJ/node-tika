@@ -1,8 +1,5 @@
 /*
- * Copyright (c) 2013, Matthew Caruana Galizia. Licensed under an MIT-style license.
- * You may obtain a copy of the License at
- *
- *		 http://mattcg.mit-license.org
+ * Copyright (c) 2013 The Center for Public Integrity®. See LICENSE.
  */
 
 package cg.m.nodetika;
