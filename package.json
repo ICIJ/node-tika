@@ -1,6 +1,6 @@
 {
 	"name": "tika",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"description": "Apache Tika bridge. Text extraction, metadata extraction, mimetype detection and language detection.",
 	"keywords": [
 		"docx",
@@ -26,11 +26,7 @@
 	"bugs": {
 		"url": "https://github.com/ICIJ/node-tika/issues"
 	},
-	"licenses": [
-		{
-			"type": "MIT"
-		}
-	],
+	"license": "MIT",
 	"dependencies": {
 		"java": "~0.5.2"
 	},
