@@ -24,6 +24,10 @@ import org.xml.sax.SAXException;
 import java.io.Writer;
 
 class RichTextContentHandler extends WriteOutContentHandler {
+	public RichTextContentHandler(Writer writer, int maxLength) {
+		super(writer, maxLength);
+	}
+
 	public RichTextContentHandler(Writer writer) {
 		super(writer);
 	}
