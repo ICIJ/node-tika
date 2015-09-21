@@ -321,6 +321,7 @@ public class NodeTika {
 
 		String outputEncoding = null;
 		String contentType = null;
+		int maxLength = -1;
 
 		if (options != null) {
 			Object option;
@@ -334,6 +335,11 @@ public class NodeTika {
 			if (option != null) {
 				contentType = option.toString();
 			}
+
+			option = options.get("maxLength");
+			if (option != null) {
+				maxLength = (int)Float.parseFloat(option.toString());
+			}
 		}
 
 		if (outputEncoding == null) {
@@ -345,7 +351,8 @@ public class NodeTika {
 
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		final OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);
-		final BodyContentHandler body = new BodyContentHandler(new RichTextContentHandler(writer));
+		final RichTextContentHandler contentHandler = new RichTextContentHandler(writer, maxLength);
+		final BodyContentHandler body = new BodyContentHandler(contentHandler);
 
 		final TikaInputStream inputStream = createInputStream(uri, metadata);
 
@@ -356,7 +363,11 @@ public class NodeTika {
 		try {
 			parser.parse(inputStream, body, metadata, context);
 		} catch (SAXException e) {
-			throw e;
+			if (!contentHandler.isWriteLimitReached(e)) {
+				throw e;
+			} else {
+				writer.close();
+			}
 		} catch (EncryptedDocumentException e) {
 			throw e;
 		} catch (TikaException e) {
