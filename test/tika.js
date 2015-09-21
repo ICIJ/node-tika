@@ -199,6 +199,26 @@ suite('document tests', function() {
 	});
 });
 
+suite('partial document extraction tests', function() {
+	test('extract from long txt', function(done) {
+		tika.text('test/data/big/file.txt', { maxLength: 10 }, function(err, text) {
+			assert.ifError(err);
+			assert.equal(text.length, 10);
+			assert.equal(text, 'Lorem ipsu');
+			done();
+		});
+	});
+
+	test('extract from pdf', function(done) {
+		tika.text('test/data/file.pdf', { maxLength: 10 }, function(err, text) {
+			assert.ifError(err);
+			assert.equal(text.length, 10);
+			assert.equal(text.trim(), 'Just some');
+			done();
+		});
+	});
+});
+
 suite('obscure document tests', function() {
 	test('extract from Word 2003 XML', function(done) {
 		tika.text('test/data/obscure/word2003.xml', function(err, text) {

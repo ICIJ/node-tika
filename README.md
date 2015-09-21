@@ -1,13 +1,13 @@
 # node-tika #
 
-Provides text extraction, metadata extraction, mime-type detection, text-encoding detection and language 
+Provides text extraction, metadata extraction, mime-type detection, text-encoding detection and language
 detection. All via a native Java bridge with the Apache Tika content-analysis toolkit. Bundles [Tika 1.8](http://tika.apache.org/1.8/index.html).
 
 [![Build Status](https://travis-ci.org/ICIJ/node-tika.png?branch=master)](https://travis-ci.org/ICIJ/node-tika) [![npm version](https://badge.fury.io/js/tika.png)](https://badge.fury.io/js/tika)
 
 Depends on [node-java](https://github.com/joeferner/node-java), which itself requires the JDK and Python 2 (not 3) to compile.
 
-Requires JDK 7. Run `node version` to check the version that `node-java` is using. If the wrong version is 
+Requires JDK 7. Run `node version` to check the version that `node-java` is using. If the wrong version is
 reported even if you installed JDK 1.7, make sure `JAVA_HOME` is set to the correct path then delete `node_modules/java` and rerun `npm install`.
 
 ## Extracting text ##
@@ -53,6 +53,7 @@ The available options are the following.
  - `contentType` to provide a hint to Tika on which parser to use.
  - `outputEncoding` to specify the text output encoding. Defaults to UTF-8.
  - `password` to set a password to be used for encrypted files.
+ - `maxLength` to specify a max number of character to extract.
 
 ### OCR options ###
 
