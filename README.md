@@ -1,7 +1,8 @@
 # node-tika #
 
 Provides text extraction, metadata extraction, mime-type detection, text-encoding detection and language 
-detection. All via a native Java bridge with the Apache Tika content-analysis toolkit. Bundles [Tika 1.8](http://tika.apache.org/1.8/index.html).
+detection. All via a native Java bridge with the Apache Tika content-analysis toolkit. Bundles [Tika 
+1.10](http://tika.apache.org/1.10/index.html).
 
 [![Build Status](https://travis-ci.org/ICIJ/node-tika.png?branch=master)](https://travis-ci.org/ICIJ/node-tika) [![npm version](https://badge.fury.io/js/tika.png)](https://badge.fury.io/js/tika)
 
