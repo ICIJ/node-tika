@@ -30,7 +30,7 @@ tika.text('test/data/file.pdf', options, function(err, text) {
 We can even extract directly from the Web. If the server returns a content-type header, it will be passed to Tika as a hint.
 
 ```javascript
-tika.text('http://www.ohchr.org/EN/UDHR/Documents/UDHR_Translations/eng.pdf', function(err, text, meta) {
+tika.text('http://www.ohchr.org/EN/UDHR/Documents/UDHR_Translations/eng.pdf', function(err, text) {
 	// ...
 });
 ```
