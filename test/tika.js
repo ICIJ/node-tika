@@ -381,6 +381,14 @@ suite('archive tests', function() {
 		});
 	});
 
+	test('extract from compressed zlib archive', function(done) {
+		tika.text('test/data/archive/files.zlib', function(err, text) {
+			assert.ifError(err);
+			assert.equal(text.trim(), 'files\nSome text 1.\nSome text 2.\nSome text 3.');
+			done();
+		});
+	});
+
 	test('detect compressed archive content-type', function(done) {
 		tika.type('test/data/archive/files.zip', function(err, contentType) {
 			assert.ifError(err);
