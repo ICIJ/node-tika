@@ -2,7 +2,7 @@
 
 Provides text extraction, metadata extraction, mime-type detection, text-encoding detection and language 
 detection. All via a native Java bridge with the Apache Tika content-analysis toolkit. Bundles [Tika 
-1.10](http://tika.apache.org/1.10/index.html).
+1.13](http://tika.apache.org/1.13/index.html).
 
 [![Build Status](https://travis-ci.org/ICIJ/node-tika.png?branch=master)](https://travis-ci.org/ICIJ/node-tika) [![npm version](https://badge.fury.io/js/tika.png)](https://badge.fury.io/js/tika)
 
@@ -76,7 +76,6 @@ The available options are the following.
  - `pdfSortByPosition` to set whether to sort text tokens by their x/y position before extracting text.
  - `pdfSpacingTolerance` see [`PDFTextStripper.setSpacingTolerance(float)`](http://pdfbox.apache.org/docs/1.8.8/javadocs/org/apache/pdfbox/util/PDFTextStripper.html#setSpacingTolerance%28float%29).
  - `pdfSuppressDuplicateOverlappingText` to set whether the parse should try to remove duplicated text over the same region.
- - `pdfUseNonSequentialParser` to set whether to use PDFBox's non-sequential parser.
 
 ### tika.extract(uri, [options,] cb) ###
 

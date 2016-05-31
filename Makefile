@@ -1,7 +1,7 @@
 .DELETE_ON_ERROR:
 
-TIKA_VERSION := 1.12
-JAVAS := $(shell ls src/main/java/cg/m/nodetika/*.java)
+TIKA_VERSION := 1.13
+JAVAS := $(shell ls src/main/java/org/icij/nodetika/*.java)
 JAR := jar/node-tika-$(TIKA_VERSION).jar
 PARSERS_JAR := build/tika/tika-core/target/tika-parsers-$(TIKA_VERSION).jar
 

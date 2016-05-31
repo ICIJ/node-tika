@@ -11,11 +11,11 @@
 
 var java = require('java');
 
-java.classpath.push(__dirname + '/jar/node-tika-1.12.jar');
+java.classpath.push(__dirname + '/jar/node-tika-1.13.jar');
 java.options.push('-Djava.awt.headless=true');
 java.options.push('-Xrs');
 
-var NodeTika = java.import('cg.m.nodetika.NodeTika');
+var NodeTika = java.import('org.icij.nodetika.NodeTika');
 
 exports.extract = function(uri, options, cb) {
 	if (arguments.length < 3) {
