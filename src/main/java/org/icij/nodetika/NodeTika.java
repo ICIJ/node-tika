@@ -41,11 +41,9 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.apache.tika.sax.ExpandedTitleContentHandler;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.exception.TikaException;
-import org.apache.tika.exception.EncryptedDocumentException;
 
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
@@ -357,16 +355,12 @@ public class NodeTika {
 
 		try {
 			parser.parse(inputStream, body, metadata, context);
-		} catch (SAXException e) {
+		} catch (Throwable e) {
 			if (!contentHandler.isWriteLimitReached(e)) {
 				throw e;
 			} else {
 				writer.close();
 			}
-		} catch (EncryptedDocumentException e) {
-			throw e;
-		} catch (TikaException e) {
-			throw e;
 		} finally {
 			inputStream.close();
 		}
@@ -433,11 +427,7 @@ public class NodeTika {
 
 		try {
 			parser.parse(inputStream, content, metadata, context);
-		} catch (SAXException e) {
-			throw e;
-		} catch (EncryptedDocumentException e) {
-			throw e;
-		} catch (TikaException e) {
+		} catch (Throwable e) {
 			throw e;
 		} finally {
 			inputStream.close();
