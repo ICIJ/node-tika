@@ -1,6 +1,6 @@
 {
 	"name": "tika",
-	"version": "1.5.0",
+	"version": "1.5.1",
 	"description": "Apache Tika bridge. Text extraction, metadata extraction, mimetype detection and language detection.",
 	"keywords": [
 		"docx",
