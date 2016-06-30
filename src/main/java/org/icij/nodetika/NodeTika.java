@@ -33,12 +33,15 @@ import org.apache.tika.parser.PasswordProvider;
 import org.apache.tika.parser.html.HtmlParser;
 import org.apache.tika.parser.ocr.TesseractOCRConfig;
 import org.apache.tika.parser.pdf.PDFParserConfig;
+import org.apache.tika.extractor.EmbeddedDocumentExtractor;
+import org.apache.tika.extractor.ParsingEmbeddedDocumentExtractor;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.detect.AutoDetectReader;
 import org.apache.tika.language.LanguageIdentifier;
 import org.apache.tika.sax.BodyContentHandler;
 import org.apache.tika.sax.ExpandedTitleContentHandler;
+import org.apache.tika.sax.WriteOutContentHandler;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.exception.TikaException;
 
@@ -81,10 +84,6 @@ public class NodeTika {
 
 	private static AutoDetectParser createParser() {
 		final AutoDetectParser parser = new AutoDetectParser(config);
-
-		Map<MediaType, Parser> parsers = parser.getParsers();
-		parsers.put(MediaType.APPLICATION_XML, new HtmlParser());
-		parser.setParsers(parsers);
 
 		parser.setFallback(new Parser() {
 			public Set<MediaType> getSupportedTypes(ParseContext parseContext) {
@@ -227,6 +226,8 @@ public class NodeTika {
 
 		if (extractInlineImages != null) {
 			pdfParserConfig.setExtractInlineImages((Boolean) extractInlineImages);
+		} else {
+			pdfParserConfig.setExtractInlineImages(true);
 		}
 
 		if (extractUniqueInlineImagesOnly != null) {
@@ -344,17 +345,17 @@ public class NodeTika {
 
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		final OutputStreamWriter writer = new OutputStreamWriter(outputStream, outputEncoding);
-		final RichTextContentHandler contentHandler = new RichTextContentHandler(writer, maxLength);
-		final BodyContentHandler body = new BodyContentHandler(contentHandler);
+		final WriteOutContentHandler contentHandler = new WriteOutContentHandler(writer, maxLength);
 
 		final TikaInputStream inputStream = createInputStream(uri, metadata);
 
 		// Set up recursive parsing of archives.
 		// See: http://wiki.apache.org/tika/RecursiveMetadata
 		context.set(Parser.class, parser);
+		context.set(EmbeddedDocumentExtractor.class, new ParsingEmbeddedDocumentExtractor(context));
 
 		try {
-			parser.parse(inputStream, body, metadata, context);
+			parser.parse(inputStream, new BodyContentHandler(contentHandler), metadata, context);
 		} catch (Throwable e) {
 			if (!contentHandler.isWriteLimitReached(e)) {
 				throw e;

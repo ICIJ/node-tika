@@ -71,7 +71,7 @@ The available options are the following.
  - `pdfEnableAutoSpace` to set whether the parser should estimate where spaces should be inserted between words (`true` by default).
  - `pdfExtractAcroFormContent` to set whether content should be extracted from AcroForms at the end of the document (`true` by default).
  - `pdfExtractAnnotationText` to set whether to extract text from annotations (`true` by default).
- - `pdfExtractInlineImages` to set whether to extract inline embedded OBX images.
+ - `pdfExtractInlineImages` to set whether to extract inline embedded OBX images (`true` by default).
  - `pdfExtractUniqueInlineImagesOnly` as multiple pages within a PDF file might refer to the same underlying image.
  - `pdfSortByPosition` to set whether to sort text tokens by their x/y position before extracting text.
  - `pdfSpacingTolerance` see [`PDFTextStripper.setSpacingTolerance(float)`](http://pdfbox.apache.org/docs/1.8.8/javadocs/org/apache/pdfbox/util/PDFTextStripper.html#setSpacingTolerance%28float%29).
