@@ -9,7 +9,7 @@ install: node_modules
 
 update: build/tika-$(TIKA_VERSION) $(JAR)
 
-$(JAR): $(JAVAS) build/tika-$(TIKA_VERSION)
+$(JAR): $(JAVAS) build/tika-$(TIKA_VERSION) pom.xml
 	mvn install
 
 $(PARSERS_JAR): build/tika-$(TIKA_VERSION)
