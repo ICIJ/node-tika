@@ -10,12 +10,33 @@
 'use strict';
 
 var java = require('java');
+var fs = require('fs');
+var q = require('q');
 
 java.classpath.push(__dirname + '/jar/node-tika-1.13.jar');
 java.options.push('-Djava.awt.headless=true');
 java.options.push('-Xrs');
 
 var NodeTika = java.import('org.icij.nodetika.NodeTika');
+
+
+var isBuffer = function(uri){
+    return true
+}
+
+var onBufferArgument = function(buffer, cb){
+    var deferred = q.defer()
+    var uri = './tmp'
+    var tmp = fs.createWriteStream(uri)
+    tmp.on('open', function(fd){
+        tmp.write(buffer);
+        tmp.close()
+    })
+    tmp.on('close', function(fd){
+        deferred.resolve(uri)
+    });
+    return deferred.promise;
+}
 
 exports.extract = function(uri, options, cb) {
 	if (arguments.length < 3) {
@@ -40,7 +61,16 @@ exports.text = function(uri, options, cb) {
 		options = null;
 	}
 
-	NodeTika.extractText(uri, JSON.stringify(options), cb);
+    if(!isBuffer(uri)){
+	    NodeTika.extractText(uri, JSON.stringify(options), cb);
+    }else{
+        onBufferArgument(uri).then(function(uri){
+            NodeTika.extractText(uri, JSON.stringify(options), function(){
+                cb.apply(null, arguments)
+                fs.unlink(uri)
+            });
+        })
+    }
 };
 
 exports.xhtml = function(uri, options, cb) {
@@ -49,7 +79,13 @@ exports.xhtml = function(uri, options, cb) {
 		options = null;
 	}
 
-	NodeTika.extractXml(uri, 'html', JSON.stringify(options), cb);
+    if(!isBuffer(uri)){
+	    NodeTika.extractXml(uri, 'html', JSON.stringify(options), cb);
+    }else{
+        onBufferArgument(uri).then(function(uri){
+            NodeTika.extractXml(uri, 'html', JSON.stringify(options), cb);
+        });
+    }
 };
 
 exports.meta = function(uri, options, cb) {
@@ -59,6 +95,7 @@ exports.meta = function(uri, options, cb) {
 		}
 
 		cb(null, JSON.parse(meta));
+        fs.unlink(uri)
 	};
 
 	if (arguments.length < 3) {
@@ -67,14 +104,35 @@ exports.meta = function(uri, options, cb) {
 	}
 
 	if (options) {
-		NodeTika.extractMeta(uri, options.contentType, handler);
-	} else {
-		NodeTika.extractMeta(uri, handler);
+        if(!isBuffer(uri)){
+            NodeTika.extractMeta(uri, options.contentType, handler);
+        }else{
+            onBufferArgument(uri).then(function(uri){
+                NodeTika.extractMeta(uri, options.contentType, handler);
+            });
+        }
+    } else {
+        if(!isBuffer(uri)){
+            NodeTika.extractMeta(uri, handler);
+        }else{
+            onBufferArgument(uri).then(function(uri){
+                NodeTika.extractMeta(uri, handler);
+            });
+        }
 	}
 };
 
 exports.type = exports.contentType = function(uri, cb) {
-	NodeTika.detectContentType(uri, cb);
+    if(!isBuffer(uri)){
+        NodeTika.detectContentType(uri, cb);
+    }else{
+        onBufferArgument(uri).then(function(uri){
+            NodeTika.detectContentType(uri, function(){
+                cb.apply(null, arguments)
+                fs.unlink(uri)
+            });
+        });
+    }
 };
 
 exports.charset = function(uri, options, cb) {
@@ -84,14 +142,41 @@ exports.charset = function(uri, options, cb) {
 	}
 
 	if (options) {
-		NodeTika.detectCharset(uri, options.contentType, cb);
+        if(!isBuffer(uri)){
+            NodeTika.detectCharset(uri, options.contentType, cb);
+        }else{
+            onBufferArgument(uri).then(function(uri){
+                NodeTika.detectCharset(uri, options.contentType, function(){
+                    cb.apply(null, arguments)
+                    fs.unlink(uri)
+                });
+            });
+        }
 	} else {
-		NodeTika.detectCharset(uri, cb);
+        if(!isBuffer(uri)){
+            NodeTika.detectCharset(uri, cb);
+        }else{
+            onBufferArgument(uri).then(function(uri){
+                NodeTika.detectCharset(uri, function(){
+                    cb.apply(null, arguments)
+                    fs.unlink(uri)
+                });
+            });
+        }
 	}
 };
 
 exports.typeAndCharset = function(uri, cb) {
-	NodeTika.detectContentTypeAndCharset(uri, cb);
+    if(!isBuffer(uri)){
+        NodeTika.detectContentTypeAndCharset(uri, cb);
+    }else{
+        onBufferArgument(uri).then(function(uri){
+            NodeTika.detectContentTypeAndCharset(uri, function(){
+                cb.apply(null, arguments)
+                fs.unlink(uri)
+            });
+        });
+    }
 };
 
 exports.language = function(text, cb) {

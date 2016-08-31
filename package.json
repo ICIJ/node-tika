@@ -1,40 +1,41 @@
 {
-	"name": "tika",
-	"version": "1.6.0",
-	"description": "Apache Tika bridge. Text extraction, metadata extraction, mimetype detection and language detection.",
-	"keywords": [
-		"docx",
-		"pdf",
-		"doc",
-		"xlsx",
-		"content analysis",
-		"office"
-	],
-	"homepage": "https://github.com/ICIJ/node-tika",
-	"main": "./tika",
-	"author": "Matthew Caruana Galizia <mcaruana@icij.org>",
-	"contributors": [
-		{
-			"name": "Matthias Götzke",
-			"email": "m.goetzke@curasystems.de"
-		}
-	],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/ICIJ/node-tika.git"
-	},
-	"bugs": {
-		"url": "https://github.com/ICIJ/node-tika/issues"
-	},
-	"license": "MIT",
-	"dependencies": {
-		"java": "~0.7.0"
-	},
-	"devDependencies": {
-		"mocha": "~2.5.3",
-		"istanbul": "~0.4.3"
-	},
-	"engines" : {
-		"node" : ">=0.10.0"
-	}
+  "name": "tika",
+  "version": "1.6.0",
+  "description": "Apache Tika bridge. Text extraction, metadata extraction, mimetype detection and language detection.",
+  "keywords": [
+    "docx",
+    "pdf",
+    "doc",
+    "xlsx",
+    "content analysis",
+    "office"
+  ],
+  "homepage": "https://github.com/ICIJ/node-tika",
+  "main": "./tika",
+  "author": "Matthew Caruana Galizia <mcaruana@icij.org>",
+  "contributors": [
+    {
+      "name": "Matthias Götzke",
+      "email": "m.goetzke@curasystems.de"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ICIJ/node-tika.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ICIJ/node-tika/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "java": "~0.7.0",
+    "q": "^1.4.1"
+  },
+  "devDependencies": {
+    "mocha": "~2.5.3",
+    "istanbul": "~0.4.3"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
 }
