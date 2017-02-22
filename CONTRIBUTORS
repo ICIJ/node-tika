@@ -9,4 +9,4 @@
 # Please keep the list sorted.
 
 Matthias Götzke <m.goetzke@curasystems.de>	Explicit UTF-8 output encoding.
-James Garner <james@beamery.com>  Dependency upgrades and npm test script.
+James Garner <james@beamery.com>	Dependency upgrades and npm test script.
