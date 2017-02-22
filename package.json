@@ -1,7 +1,10 @@
 {
 	"name": "tika",
-	"version": "1.6.0",
+	"version": "1.6.1",
 	"description": "Apache Tika bridge. Text extraction, metadata extraction, mimetype detection and language detection.",
+	"scripts": {
+		"test": "mocha --ui tdd test"
+	},
 	"keywords": [
 		"docx",
 		"pdf",
@@ -17,6 +20,10 @@
 		{
 			"name": "Matthias Götzke",
 			"email": "m.goetzke@curasystems.de"
+		},
+		{
+			"name": "James Garner",
+			"email": "james@beamery.com"
 		}
 	],
 	"repository": {
@@ -28,11 +35,11 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"java": "~0.7.0"
+		"java": "~0.8.0"
 	},
 	"devDependencies": {
-		"mocha": "~2.5.3",
-		"istanbul": "~0.4.3"
+		"mocha": "~3.2.0",
+		"istanbul": "~0.4.5"
 	},
 	"engines" : {
 		"node" : ">=0.10.0"
