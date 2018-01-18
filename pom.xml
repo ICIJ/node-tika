@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.apache.tika</groupId>
 		<artifactId>tika-parent</artifactId>
-		<version>1.13</version>
+		<version>1.17</version>
 		<relativePath>../tika-parent/pom.xml</relativePath>
 	</parent>
 
@@ -100,7 +100,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
+				<version>2.6</version>
 				<configuration>
 					<outputDirectory>jar</outputDirectory>
 				</configuration>
