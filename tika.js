@@ -11,7 +11,7 @@
 
 var java = require('java');
 
-java.classpath.push(__dirname + '/jar/node-tika-1.17.jar');
+java.classpath.push(__dirname + '/jar/node-tika-1.18.jar');
 java.options.push('-Djava.awt.headless=true');
 java.options.push('-Xrs');
 
