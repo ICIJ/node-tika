@@ -68,6 +68,7 @@ public class NodeTika {
 
 		if (uri.startsWith("http://") || uri.startsWith("https://") || uri.startsWith("ftp://")) {
 			final URLConnection urlConnection = new URL(uri).openConnection();
+			urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) Gecko/20100101 Firefox/58.0");
 
 			// If a metadata object was passed, fill it with the content-type returned from the server.
 			if (metadata != null) {
