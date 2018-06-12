@@ -454,9 +454,9 @@ suite('error handling tests', function() {
 
 suite('http extraction tests', function() {
 	test('extract from pdf over http', function(done) {
-		tika.text('http://www.ohchr.org/EN/UDHR/Documents/UDHR_Translations/eng.pdf', function(err, text) {
+		tika.text('https://tools.ietf.org/pdf/rfc2324.pdf', function(err, text) {
 			assert.ifError(err);
-			assert.ok(-1 !== text.indexOf('Universal Declaration of Human Rights'));
+			assert.ok(-1 !== text.indexOf('Hyper Text Coffee Pot Control Protocol'));
 			done();
 		});
 	});
