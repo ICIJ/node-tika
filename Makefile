@@ -1,6 +1,6 @@
 .DELETE_ON_ERROR:
 
-TIKA_VERSION := 1.18
+TIKA_VERSION := 1.20
 JAVAS := $(shell ls src/main/java/org/icij/nodetika/*.java)
 JAR := jar/node-tika-$(TIKA_VERSION).jar
 PARSERS_JAR := build/tika/tika-core/target/tika-parsers-$(TIKA_VERSION).jar
@@ -18,7 +18,7 @@ $(PARSERS_JAR): build/tika-$(TIKA_VERSION)
 
 build/tika-$(TIKA_VERSION)-src.zip: build
 	if [ ! -f $@ ]; then \
-		curl http://www.eu.apache.org/dist/tika/tika-$(TIKA_VERSION)-src.zip --output build/tika-$(TIKA_VERSION)-src.zip; \
+		curl http://www.apache.org/dist/tika/tika-$(TIKA_VERSION)-src.zip --output build/tika-$(TIKA_VERSION)-src.zip; \
 	else \
 		touch $@; \
 	fi
