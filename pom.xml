@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.apache.tika</groupId>
 		<artifactId>tika-parent</artifactId>
-		<version>1.13</version>
+		<version>1.20</version>
 		<relativePath>../tika-parent/pom.xml</relativePath>
 	</parent>
 
@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.6.2</version>
+			<version>2.8.5</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -49,7 +49,7 @@
 		<dependency>
 			<groupId>com.github.jai-imageio</groupId>
 			<artifactId>jai-imageio-core</artifactId>
-			<version>1.3.1</version>
+			<version>1.4.0</version>
 		</dependency>
 	</dependencies>
 
@@ -100,7 +100,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
+				<version>2.6</version>
 				<configuration>
 					<outputDirectory>jar</outputDirectory>
 				</configuration>

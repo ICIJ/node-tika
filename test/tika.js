@@ -438,7 +438,7 @@ suite('error handling tests', function() {
 	test('extract from encrypted doc', function(done) {
 		tika.text('test/data/encrypted/file.doc', function(err, text) {
 			assert.ok(err);
-			assert.ok(-1 !== err.toString().indexOf('EncryptedDocumentException: Cannot process encrypted word file'));
+			assert.ok(-1 !== err.toString().indexOf('EncryptedDocumentException: Unable to process: document is encrypted'));
 			done();
 		});
 	});
@@ -454,9 +454,9 @@ suite('error handling tests', function() {
 
 suite('http extraction tests', function() {
 	test('extract from pdf over http', function(done) {
-		tika.text('http://www.ohchr.org/EN/UDHR/Documents/UDHR_Translations/eng.pdf', function(err, text) {
+		tika.text('https://tools.ietf.org/pdf/rfc2324.pdf', function(err, text) {
 			assert.ifError(err);
-			assert.ok(-1 !== text.indexOf('Universal Declaration of Human Rights'));
+			assert.ok(-1 !== text.indexOf('Hyper Text Coffee Pot Control Protocol'));
 			done();
 		});
 	});
@@ -464,9 +464,10 @@ suite('http extraction tests', function() {
 
 suite('ftp extraction tests', function() {
 	test('extract from text file over ftp', function(done) {
-		tika.text('ftp://ftp.ed.ac.uk/INSTRUCTIONS-FOR-USING-THIS-SERVICE', function(err, text) {
+		this.timeout(5000);
+		tika.text('ftp://ftp.ietf.org/rfc/rfc959.txt', function(err, text) {
 			assert.ifError(err);
-			assert.ok(-1 !== text.indexOf('This service is managed by Information Services'));
+			assert.ok(-1 !== text.indexOf('FILE TRANSFER PROTOCOL'));
 			done();
 		});
 	});
